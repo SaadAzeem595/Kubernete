@@ -1,0 +1,490 @@
+Microsoft Windows [Version 10.0.26200.8037]
+(c) Microsoft Corporation. All rights reserved.
+
+C:\Windows\System32>choco install minikube
+Chocolatey v2.7.1
+Installing the following packages:
+minikube
+By installing, you accept licenses for the packages.
+Downloading package from source 'https://community.chocolatey.org/api/v2/'
+Progress: Downloading Minikube 1.38.1... 100%
+
+Minikube v1.38.1 [Approved]
+Minikube package files install completed. Performing other installation steps.
+ ShimGen has successfully created a shim for minikube.exe
+ The install of Minikube was successful.
+  Deployed to 'C:\ProgramData\chocolatey\lib\Minikube'
+
+Chocolatey installed 1/1 packages.
+ See the log for details (C:\ProgramData\chocolatey\logs\chocolatey.log).
+
+C:\Windows\System32>minikube start
+* minikube v1.38.1 on Microsoft Windows 11 Pro 25H2
+* Automatically selected the hyperv driver
+! Starting v1.39.0, minikube will default to "containerd" container runtime. See #21973 for more info.
+* Downloading VM boot image ...
+    > minikube-v1.38.0-amd64.iso....:  65 B / 65 B [---------] 100.00% ? p/s 0s
+    > minikube-v1.38.0-amd64.iso:  370.55 MiB / 370.55 MiB  100.00% 283.58 KiB
+* Starting "minikube" primary control-plane node in "minikube" cluster
+* Downloading Kubernetes v1.35.1 preload ...
+    > preloaded-images-k8s-v18-v1...:  272.45 MiB / 272.45 MiB  100.00% 313.13
+* Creating hyperv VM (CPUs=2, Memory=3072MB, Disk=20000MB) ...
+! StartHost failed, but will try again: creating host: create: precreate: Hyper-V PowerShell Module is not available
+* Creating hyperv VM (CPUs=2, Memory=3072MB, Disk=20000MB) ...
+* Failed to start hyperv VM. Running "minikube delete" may fix it: creating host: create: precreate: Hyper-V PowerShell Module is not available
+
+X Exiting due to PR_HYPERV_MODULE_NOT_INSTALLED: Failed to start host: creating host: create: precreate: Hyper-V PowerShell Module is not available
+* Suggestion: Run: 'Enable-WindowsOptionalFeature -Online -FeatureName Microsoft-Hyper-V-Tools-All -All'
+* Documentation: https://www.altaro.com/hyper-v/install-hyper-v-powershell-module/
+* Related issue: https://github.com/kubernetes/minikube/issues/9040
+
+
+C:\Windows\System32>docker ps
+failed to connect to the docker API at npipe:////./pipe/dockerDesktopLinuxEngine; check if the path is correct and if the daemon is running: open //./pipe/dockerDesktopLinuxEngine: The system cannot find the file specified.
+
+C:\Windows\System32>docker --version
+Docker version 29.3.1, build c2be9cc
+
+C:\Windows\System32>docker ps
+failed to connect to the docker API at npipe:////./pipe/dockerDesktopLinuxEngine; check if the path is correct and if the daemon is running: open //./pipe/dockerDesktopLinuxEngine: The system cannot find the file specified.
+
+C:\Windows\System32>docker ps
+CONTAINER ID   IMAGE     COMMAND   CREATED   STATUS    PORTS     NAMES
+
+C:\Windows\System32>docker ps
+CONTAINER ID   IMAGE     COMMAND   CREATED   STATUS    PORTS     NAMES
+
+C:\Windows\System32>minikube start --driver=docker
+* minikube v1.38.1 on Microsoft Windows 11 Pro 25H2
+E0408 23:54:31.156158   13904 start.go:846] api.Load failed for minikube: filestore "minikube": Docker machine "minikube" does not exist. Use "docker-machine ls" to list machines. Use "docker-machine create" to add a new one.
+
+! Exiting due to GUEST_DRIVER_MISMATCH: The existing "minikube" cluster was created using the "hyperv" driver, which is incompatible with requested "docker" driver.
+* Suggestion: Delete the existing 'minikube' cluster using: 'minikube delete', or start the existing 'minikube' cluster using: 'minikube start --driver=hyperv'
+
+
+C:\Windows\System32>docker ps
+CONTAINER ID   IMAGE     COMMAND   CREATED   STATUS    PORTS     NAMES
+
+C:\Windows\System32>minikube delete
+* Removed all traces of the "minikube" cluster.
+
+C:\Windows\System32>minikube start --driver=docker
+* minikube v1.38.1 on Microsoft Windows 11 Pro 25H2
+* Using the docker driver based on user configuration
+! Starting v1.39.0, minikube will default to "containerd" container runtime. See #21973 for more info.
+* Using Docker Desktop driver with root privileges
+* Starting "minikube" primary control-plane node in "minikube" cluster
+* Pulling base image v0.0.50 ...
+    > gcr.io/k8s-minikube/kicbase...:  202.70 MiB / 519.58 MiB  39.01% 737.87 K
+! minikube cannot pull kicbase image from any docker registry, and is trying to download kicbase tarball from github release page via HTTP.
+! It's very likely that you have an internet issue. Please ensure that you can access the internet at least via HTTP, directly or with proxy. Currently your proxy configuration is:
+
+E0409 00:00:25.883293   17316 cache.go:239] Error downloading kic artifacts:  failed to download kic base image or any fallback image
+* Creating docker container (CPUs=2, Memory=3072MB) ...
+! StartHost failed, but will try again: creating host: create: creating: setting up container node: preparing volume for minikube container: docker run --rm --name minikube-preload-sidecar --label created_by.minikube.sigs.k8s.io=true --label name.minikube.sigs.k8s.io=minikube --entrypoint /usr/bin/test -v minikube:/var gcr.io/k8s-minikube/kicbase:v0.0.50@sha256:eb4fec00e8ad70adf8e6436f195cc429825ffb85f95afcdb5d8d9deb576f3e93 -d /var/lib: exit status 125
+stdout:
+
+stderr:
+Unable to find image 'gcr.io/k8s-minikube/kicbase:v0.0.50@sha256:eb4fec00e8ad70adf8e6436f195cc429825ffb85f95afcdb5d8d9deb576f3e93' locally
+docker: Error response from daemon: failed to resolve reference "gcr.io/k8s-minikube/kicbase@sha256:eb4fec00e8ad70adf8e6436f195cc429825ffb85f95afcdb5d8d9deb576f3e93": failed to do request: Head "https://gcr.io/v2/k8s-minikube/kicbase/manifests/sha256:eb4fec00e8ad70adf8e6436f195cc429825ffb85f95afcdb5d8d9deb576f3e93": dialing gcr.io:443 container via direct connection because Docker Desktop has no HTTPS proxy: connecting to gcr.io:443: dial tcp: lookup gcr.io: no such host
+
+Run 'docker run --help' for more information
+
+* docker "minikube" container is missing, will recreate.
+^C
+C:\Windows\System32>minikube delete
+* Deleting "minikube" in docker ...
+* Removing C:\Users\saada\.minikube\machines\minikube ...
+* Removed all traces of the "minikube" cluster.
+
+C:\Windows\System32>minikube start --driver=docker
+* minikube v1.38.1 on Microsoft Windows 11 Pro 25H2
+* Using the docker driver based on user configuration
+! Starting v1.39.0, minikube will default to "containerd" container runtime. See #21973 for more info.
+* Using Docker Desktop driver with root privileges
+* Starting "minikube" primary control-plane node in "minikube" cluster
+* Pulling base image v0.0.50 ...
+    > index.docker.io/kicbase/sta...:  519.58 MiB / 519.58 MiB  100.00% 716.67
+! minikube was unable to download gcr.io/k8s-minikube/kicbase:v0.0.50, but successfully downloaded docker.io/kicbase/stable:v0.0.50@sha256:eb4fec00e8ad70adf8e6436f195cc429825ffb85f95afcdb5d8d9deb576f3e93 as a fallback image
+* Creating docker container (CPUs=2, Memory=3072MB) ...
+* Preparing Kubernetes v1.35.1 on Docker 29.2.1 ...
+* Configuring bridge CNI (Container Networking Interface) ...
+* Verifying Kubernetes components...
+  - Using image gcr.io/k8s-minikube/storage-provisioner:v5
+* Enabled addons: storage-provisioner, default-storageclass
+* Done! kubectl is now configured to use "minikube" cluster and "default" namespace by default
+
+C:\Windows\System32>minikube status
+minikube
+type: Control Plane
+host: Running
+kubelet: Running
+apiserver: Running
+kubeconfig: Configured
+
+
+C:\Windows\System32>kubectl get nodes
+NAME       STATUS   ROLES           AGE   VERSION
+minikube   Ready    control-plane   61s   v1.35.1
+
+C:\Windows\System32>docker --version
+Docker version 29.3.1, build c2be9cc
+
+C:\Windows\System32>docker ps
+CONTAINER ID   IMAGE                    COMMAND                  CREATED         STATUS         PORTS                                                                                                                                  NAMES
+09c30752d726   kicbase/stable:v0.0.50   "/usr/local/bin/entr…"   2 minutes ago   Up 2 minutes   127.0.0.1:52744->22/tcp, 127.0.0.1:52745->2376/tcp, 127.0.0.1:52742->5000/tcp, 127.0.0.1:52743->8443/tcp, 127.0.0.1:52741->32443/tcp   minikube
+
+C:\Windows\System32>minikube dashboard
+* Enabling dashboard ...
+  - Using image docker.io/kubernetesui/metrics-scraper:v1.0.8
+  - Using image docker.io/kubernetesui/dashboard:v2.7.0
+* Some dashboard features require the metrics-server addon. To enable all features please run:
+
+        minikube addons enable metrics-server
+
+* Verifying dashboard health ...
+* Launching proxy ...
+* Verifying proxy health ...
+* Opening http://127.0.0.1:63161/api/v1/namespaces/kubernetes-dashboard/services/http:kubernetes-dashboard:/proxy/ in your default browser...
+^C
+C:\Windows\System32>minikube status
+minikube
+type: Control Plane
+host: Running
+kubelet: Running
+apiserver: Running
+kubeconfig: Configured
+
+
+C:\Windows\System32>minikube delete
+* Deleting "minikube" in docker ...
+* Deleting container "minikube" ...
+* Removing C:\Users\saada\.minikube\machines\minikube ...
+* Removed all traces of the "minikube" cluster.
+
+--------------------------------------------------------------------------------------------------------------------------
+
+C:\Windows\System32>minikube delete
+* Removed all traces of the "minikube" cluster.
+
+C:\Windows\System32>minikube start --driver=docker
+* minikube v1.38.1 on Microsoft Windows 11 Pro 25H2
+* Using the docker driver based on user configuration
+! Starting v1.39.0, minikube will default to "containerd" container runtime. See #21973 for more info.
+* Using Docker Desktop driver with root privileges
+* Starting "minikube" primary control-plane node in "minikube" cluster
+* Pulling base image v0.0.50 ...
+! minikube was unable to download gcr.io/k8s-minikube/kicbase:v0.0.50, but successfully downloaded docker.io/kicbase/stable:v0.0.50@sha256:eb4fec00e8ad70adf8e6436f195cc429825ffb85f95afcdb5d8d9deb576f3e93 as a fallback image
+* Creating docker container (CPUs=2, Memory=3072MB) ...
+* Preparing Kubernetes v1.35.1 on Docker 29.2.1 ...
+* Configuring bridge CNI (Container Networking Interface) ...
+* Verifying Kubernetes components...
+  - Using image gcr.io/k8s-minikube/storage-provisioner:v5
+* Enabled addons: storage-provisioner, default-storageclass
+* Done! kubectl is now configured to use "minikube" cluster and "default" namespace by default
+
+C:\Windows\System32>kubectl create deployment my-nginx --image=nginx:latest
+deployment.apps/my-nginx created
+
+C:\Windows\System32>kubectl get deployments
+NAME       READY   UP-TO-DATE   AVAILABLE   AGE
+my-nginx   0/1     1            0           69s
+
+# Depolyment Object created pod by default
+C:\Windows\System32>kubectl get pods
+NAME                        READY   STATUS    RESTARTS   AGE
+my-nginx-6f674f685f-nw9jn   1/1     Running   0          3m32s
+
+# Access the nginx
+C:\Windows\System32>kubectl expose deployment my-nginx --type=NodePort --port=80
+service/my-nginx exposed
+
+C:\Windows\System32>kubectl get services
+NAME         TYPE        CLUSTER-IP       EXTERNAL-IP   PORT(S)        AGE
+kubernetes   ClusterIP   10.96.0.1        <none>        443/TCP        70m
+my-nginx     NodePort    10.100.193.182   <none>        80:32255/TCP   33s
+
+C:\Windows\System32>minikube service my-nginx
+┌───────────┬──────────┬─────────────┬───────────────────────────┐
+│ NAMESPACE │   NAME   │ TARGET PORT │            URL            │
+├───────────┼──────────┼─────────────┼───────────────────────────┤
+│ default   │ my-nginx │ 80          │ http://192.168.49.2:32255 │
+└───────────┴──────────┴─────────────┴───────────────────────────┘
+* Starting tunnel for service my-nginx.
+┌───────────┬──────────┬─────────────┬────────────────────────┐
+│ NAMESPACE │   NAME   │ TARGET PORT │          URL           │
+├───────────┼──────────┼─────────────┼────────────────────────┤
+│ default   │ my-nginx │             │ http://127.0.0.1:50079 │
+└───────────┴──────────┴─────────────┴────────────────────────┘
+* Opening service default/my-nginx in default browser...
+! Because you are using a Docker driver on windows, the terminal needs to be open to run it.
+* Stopping tunnel for service my-nginx.
+
+====================================================================================================
+
+# In VS code terminal
+
+(base) PS D:\Kubernete> node -v
+v24.11.1
+(base) PS D:\Kubernete> npx create-react-app testapp
+
+....
+....
+
+(base) PS D:\Kubernete> cd testapp                  
+(base) PS D:\Kubernete\testapp> npm start
+
+> testapp@0.1.0 start
+> react-scripts start
+
+(node:13848) [DEP0176] DeprecationWarning: fs.F_OK is deprecated, use fs.constants.F_OK instead
+(Use `node --trace-deprecation ...` to show where the warning was created)
+(node:13848) [DEP_WEBPACK_DEV_SERVER_ON_AFTER_SETUP_MIDDLEWARE] DeprecationWarning: 'onAfterSetupMiddleware' option is deprecated. Please use the 'setupMiddlewares' option.
+(node:13848) [DEP_WEBPACK_DEV_SERVER_ON_BEFORE_SETUP_MIDDLEWARE] DeprecationWarning: 'onBeforeSetupMiddleware' option is deprecated. Please use the 'setupMiddlewares' option.
+Starting the development server...
+Compiled successfully!
+
+You can now view testapp in the browser.
+
+  Local:            http://localhost:3000
+  On Your Network:  http://192.168.80.1:3000
+
+Note that the development build is not optimized.
+To create a production build, use npm run build.
+
+webpack compiled successfully
+
+(base) PS D:\Kubernete\testapp> docker ps
+CONTAINER ID   IMAGE     COMMAND   CREATED   STATUS    PORTS     NAMES
+(base) PS D:\Kubernete\testapp> docker build -t saadazeem786/testapp:latest1 .
+[+] Building 28.2s (10/10) FINISHED                                                                        docker:desktop-linux
+ => [internal] load build definition from Dockerfile                                                                       0.0s
+ => => transferring dockerfile: 122B                                                                                       0.0s 
+ => [internal] load metadata for docker.io/library/node:20                                                                 3.5s 
+ => [auth] library/node:pull token for registry-1.docker.io                                                                0.0s 
+ => [internal] load .dockerignore                                                                                          0.0s
+ => => transferring context: 2B                                                                                            0.0s 
+ => [1/4] FROM docker.io/library/node:20@sha256:8789e1e0752d81088a085689c04fdb7a5b16e8102e353118a4b049bbf05db8ac           0.1s 
+ => => resolve docker.io/library/node:20@sha256:8789e1e0752d81088a085689c04fdb7a5b16e8102e353118a4b049bbf05db8ac           0.0s 
+ => [internal] load build context                                                                                          5.6s 
+ => => transferring context: 3.08MB                                                                                        5.3s 
+ => CACHED [2/4] WORKDIR /myapp                                                                                            0.0s
+ => CACHED [3/4] COPY . .                                                                                                  0.0s 
+ => CACHED [4/4] RUN npm install                                                                                           0.0s 
+ => exporting to image                                                                                                    18.8s 
+ => => exporting layers                                                                                                    0.0s 
+ => => exporting manifest sha256:2b840a98bfae3453850ca186b434a0cc87bbdc07610b4e8ee9520311a0a311bf                          0.0s 
+ => => exporting config sha256:a7970cfeed5bdf4970c6d5d436189642f4cd17a95e71d2dc6c8e9ba003a7eb1c                            0.0s 
+ => => exporting attestation manifest sha256:d55fc94ea4860aef9781569477137de91a7df39f4796864002a412fa4f9a1f76              0.1s 
+ => => exporting manifest list sha256:dbfdf33e0040ae3efda78b586b4ab0725dcd99cb24554c53c873d0db1714207a                     0.0s
+ => => naming to docker.io/saadazeem786/testapp:latest1                                                                    0.0s 
+ => => unpacking to docker.io/saadazeem786/testapp:latest1                                                                18.5s 
+(base) PS D:\Kubernete\testapp> docker login
+Authenticating with existing credentials... [Username: saadazeem786]
+
+i Info → To login with a different account, run 'docker logout' followed by 'docker login'
+
+
+Login Succeeded
+(base) PS D:\Kubernete\testapp> docker push saadazeem786/testapp:latest1
+The push refers to repository [docker.io/saadazeem786/testapp]
+c03266ef53d8: Pushed
+de73ef470b7b: Layer already exists
+c7e4851cdcce: Pushed 
+0d4319bae870: Layer already exists
+d8532949980f: Layer already exists
+c2c3414b1d6b: Layer already exists
+8480aa1086a2: Layer already exists
+b267853a2602: Layer already exists
+e4878375125a: Pushed
+554bab0bf8e5: Layer already exists
+e6275fd2e2fd: Layer already exists
+c150dd3f5fc9: Layer already exists
+latest1: digest: sha256:dbfdf33e0040ae3efda78b586b4ab0725dcd99cb24554c53c873d0db1714207a size: 856
+(base) PS D:\Kubernete\testapp> 
+
+-----------------------------------------------------------------------------------------------------
+#First create the image container
+Windows PowerShell
+Copyright (C) Microsoft Corporation. All rights reserved.
+
+Install the latest PowerShell for new features and improvements! https://aka.ms/PSWindows
+
+Loading personal and system profiles took 10854ms.
+(base) PS C:\WINDOWS\system32> Remove-Item -Recurse -Force C:\Users\saada\.minikube
+(base) PS C:\WINDOWS\system32> docker stop minikube
+Error response from daemon: No such container: minikube
+(base) PS C:\WINDOWS\system32> docker rm minikube
+Error response from daemon: No such container: minikube
+(base) PS C:\WINDOWS\system32> minikube start --driver=docker
+* minikube v1.38.1 on Microsoft Windows 11 Pro 25H2
+* Using the docker driver based on user configuration
+! Starting v1.39.0, minikube will default to "containerd" container runtime. See #21973 for more info.
+* Using Docker Desktop driver with root privileges
+* Starting "minikube" primary control-plane node in "minikube" cluster
+* Pulling base image v0.0.50 ...
+* Downloading Kubernetes v1.35.1 preload ...
+    > preloaded-images-k8s-v18-v1...:  272.45 MiB / 272.45 MiB  100.00% 467.70
+    > gcr.io/k8s-minikube/kicbase...:  519.58 MiB / 519.58 MiB  100.00% 892.99
+* Creating docker container (CPUs=2, Memory=3072MB) ...
+* Preparing Kubernetes v1.35.1 on Docker 29.2.1 ...
+* Configuring bridge CNI (Container Networking Interface) ...
+* Verifying Kubernetes components...
+  - Using image gcr.io/k8s-minikube/storage-provisioner:v5
+* Enabled addons: storage-provisioner, default-storageclass
+* Done! kubectl is now configured to use "minikube" cluster and "default" namespace by default
+(base) PS C:\WINDOWS\system32>
+
+# deployment our WebApp on kubernete
+(base) PS D:\Kubernete\testapp> docker login
+Authenticating with existing credentials... [Username: saadazeem786]
+
+i Info → To login with a different account, run 'docker logout' followed by 'docker login'
+
+
+Login Succeeded
+(base) PS D:\Kubernete\testapp> minikube status
+minikube
+type: Control Plane
+host: Running
+kubelet: Running
+apiserver: Running
+kubeconfig: Configured
+
+(base) PS D:\Kubernete\testapp> kubectl create deployment my-webapp --image=saadazeem786/testapp:latest1
+deployment.apps/my-webapp created
+(base) PS D:\Kubernete\testapp> kubectl get deployments
+NAME        READY   UP-TO-DATE   AVAILABLE   AGE
+my-webapp   0/1     1            0           30s
+(base) PS D:\Kubernete\testapp> kubectl get pods       
+NAME                         READY   STATUS              RESTARTS   AGE
+my-webapp-5f4b548d46-k8lvv   0/1     ContainerCreating   0          60s
+
+(base) PS D:\Kubernete\testapp> kubectl get deployments
+NAME        READY   UP-TO-DATE   AVAILABLE   AGE
+my-webapp   1/1     1            1           24m
+(base) PS D:\Kubernete\testapp> 
+(base) PS D:\Kubernete\testapp> kubectl get pods
+NAME                         READY   STATUS    RESTARTS   AGE
+my-webapp-5f4b548d46-k8lvv   1/1     Running   0          23m
+(base) PS D:\Kubernete\testapp> 
+
+# For delete
+(base) PS D:\Kubernete\testapp> kubectl delete deployment my-webapp
+deployment.apps "my-webapp" deleted from default namespace
+(base) PS D:\Kubernete\testapp> kubectl get deployments
+No resources found in default namespace.
+(base) PS D:\Kubernete\testapp> 
+(base) PS D:\Kubernete\testapp> minikube dashboard
+🤔  Verifying dashboard health ...
+🚀  Launching proxy ...
+🤔  Verifying proxy health ...
+🎉  Opening http://127.0.0.1:64993/api/v1/namespaces/kubernetes-dashboard/services/http:kubernetes-dashboard:/proxy/ in your default browser...
+(base) PS D:\Kubernete\testapp> 
+
+# To check the activities
+(base) PS D:\Kubernete\testapp> kubectl logs my-webapp-5f4b548d46-7p8gq
+
+> testapp@0.1.0 start
+> react-scripts start
+
+(node:31) [DEP_WEBPACK_DEV_SERVER_ON_AFTER_SETUP_MIDDLEWARE] DeprecationWarning: 'onAfterSetupMiddleware' option is deprecated. Please use the 'setupMiddlewares' option.
+(Use `node --trace-deprecation ...` to show where the warning was created)
+(node:31) [DEP_WEBPACK_DEV_SERVER_ON_BEFORE_SETUP_MIDDLEWARE] DeprecationWarning: 'onBeforeSetupMiddleware' option is deprecated. Please use the 'setupMiddlewares' option.
+Starting the development server...
+
+Compiled successfully!
+
+You can now view testapp in the browser.
+
+  Local:            http://localhost:3000
+  On Your Network:  http://10.244.0.8:3000
+
+Note that the development build is not optimized.
+To create a production build, use npm run build.
+
+webpack compiled successfully
+Compiling...
+Compiled successfully!
+webpack compiled successfully
+(base) PS D:\Kubernete\testapp> kubectl describe pods
+Name:             my-webapp-5f4b548d46-7p8gq
+Namespace:        default
+Priority:         0
+Service Account:  default
+Node:             minikube/192.168.49.2
+Start Time:       Sat, 11 Apr 2026 23:48:19 +0500
+Labels:           app=my-webapp
+                  pod-template-hash=5f4b548d46
+Annotations:      <none>
+Status:           Running
+IP:               10.244.0.8
+IPs:
+  IP:           10.244.0.8
+Controlled By:  ReplicaSet/my-webapp-5f4b548d46
+Containers:
+  testapp:
+    Container ID:   docker://e2e3888f6bbc3077af52ffad6e533ac4c0c5e289447c934a4f2ab82605890281
+    Image:          saadazeem786/testapp:latest1
+    Image ID:       docker-pullable://saadazeem786/testapp@sha256:dbfdf33e0040ae3efda78b586b4ab0725dcd99cb24554c53c873d0db1714207a
+    Port:           <none>
+    Host Port:      <none>
+    State:          Running
+      Started:      Sat, 11 Apr 2026 23:48:20 +0500
+    Ready:          True
+    Restart Count:  0
+    Environment:    <none>
+    Mounts:
+      /var/run/secrets/kubernetes.io/serviceaccount from kube-api-access-vnrhm (ro)
+Conditions:
+  Type                        Status
+  PodReadyToStartContainers   True
+  Initialized                 True
+  Ready                       True
+  ContainersReady             True
+  PodScheduled                True
+Volumes:
+  kube-api-access-vnrhm:
+    Type:                    Projected (a volume that contains injected data from multiple sources)
+    TokenExpirationSeconds:  3607
+    ConfigMapName:           kube-root-ca.crt
+    Optional:                false
+    DownwardAPI:             true
+QoS Class:                   BestEffort
+Node-Selectors:              <none>
+Tolerations:                 node.kubernetes.io/not-ready:NoExecute op=Exists for 300s
+                             node.kubernetes.io/unreachable:NoExecute op=Exists for 300s
+Events:
+  Type    Reason     Age   From               Message
+  ----    ------     ----  ----               -------
+  Normal  Scheduled  20m   default-scheduler  Successfully assigned default/my-webapp-5f4b548d46-7p8gq to minikube
+  Normal  Pulled     20m   kubelet            Container image "saadazeem786/testapp:latest1" already present on machine and can be accessed by the pod   
+  Normal  Created    20m   kubelet            Container created
+  Normal  Started    20m   kubelet            Container started
+(base) PS D:\Kubernete\testapp> 
+
+---------------------------------------------------------------------------------------------------------------------------
+
+# Exposing PORT using service
+
+(base) PS D:\Kubernete\testapp> kubectl expose deployment my-webapp --type=LoadBalancer --port=3000 
+service/my-webapp exposed
+(base) PS D:\Kubernete\testapp> kubectl get services
+NAME         TYPE           CLUSTER-IP      EXTERNAL-IP   PORT(S)          AGE
+kubernetes   ClusterIP      10.96.0.1       <none>        443/TCP          10h
+my-webapp    LoadBalancer   10.99.124.184   <pending>     3000:32450/TCP   15s
+
+(base) PS D:\Kubernete\testapp> minikube service my-webapp 
+┌───────────┬───────────┬─────────────┬───────────────────────────┐
+│ NAMESPACE │   NAME    │ TARGET PORT │            URL            │
+├───────────┼───────────┼─────────────┼───────────────────────────┤
+│ default   │ my-webapp │ 3000        │ http://192.168.49.2:32450 │
+└───────────┴───────────┴─────────────┴───────────────────────────┘
+🔗  Starting tunnel for service my-webapp.
+┌───────────┬───────────┬─────────────┬────────────────────────┐
+│ NAMESPACE │   NAME    │ TARGET PORT │          URL           │
+├───────────┼───────────┼─────────────┼────────────────────────┤
+│ default   │ my-webapp │             │ http://127.0.0.1:58599 │
+└───────────┴───────────┴─────────────┴────────────────────────┘
+🎉  Opening service default/my-webapp in default browser...
+❗  Because you are using a Docker driver on windows, the terminal needs to be open to run it.
