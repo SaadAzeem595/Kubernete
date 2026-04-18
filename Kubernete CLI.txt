@@ -488,3 +488,212 @@ my-webapp    LoadBalancer   10.99.124.184   <pending>     3000:32450/TCP   15s
 └───────────┴───────────┴─────────────┴────────────────────────┘
 🎉  Opening service default/my-webapp in default browser...
 ❗  Because you are using a Docker driver on windows, the terminal needs to be open to run it.
+
+# ==========================================
+# 1. Create Deployment
+# ==========================================
+kubectl create deployment node-app --image=philippaul/node-demo-app:01
+
+# ==========================================
+# 2. Update Deployment (New Version)
+# ==========================================
+kubectl set image deployment/node-app \
+node-app=nginx:latest
+
+# This updates container image (creates new revision)
+
+
+# ==========================================
+# 3. Check Rollout Status
+# ==========================================
+kubectl rollout status deployment/node-app
+
+
+# ==========================================
+# 4. View Rollout History
+# ==========================================
+kubectl rollout history deployment/node-app
+
+
+# ==========================================
+# 5. Rollback to Previous Version
+# ==========================================
+kubectl rollout undo deployment/node-app
+
+# Rollback to specific revision (optional)
+kubectl rollout undo deployment/node-app --to-revision=1
+
+
+# ==========================================
+# 6. Verify Rollback
+# ==========================================
+kubectl get pods
+kubectl describe deployment node-app
+
+
+--------------------------------------------------------------------------------------------------------------
+
+Self-Healing in K8
+
+(base) PS D:\Kubernete\express-demo> cd express-demo
+(base) PS D:\Kubernete\express-demo\express-demo> npm install
+
+added 62 packages, and audited 63 packages in 11s
+
+11 packages are looking for funding
+  run `npm fund` for details
+
+7 vulnerabilities (3 low, 1 moderate, 3 high)
+
+To address all issues, run:
+  npm audit fix
+
+Run `npm audit` for details.
+(base) PS D:\Kubernete\express-demo\express-demo> node index.js
+Server is running on port 3000            # localhost:3000/exit
+(base) PS D:\Kubernete\express-demo\express-demo> minikube start --driver=docker
+😄  minikube v1.38.1 on Microsoft Windows 11 Pro 25H2
+✨  Using the docker driver based on user configuration
+❗  Starting v1.39.0, minikube will default to "containerd" container runtime. See #21973 for more info.       
+✨  Using the docker driver based on user configuration
+❗  Starting v1.39.0, minikube will default to "containerd" container runtime. See #21973 for more info.       
+📌  Using Docker Desktop driver with root privileges
+👍  Starting "minikube" primary control-plane node in "minikube" cluster
+🚜  Pulling base image v0.0.50 ...
+💾  Downloading Kubernetes v1.35.1 preload ...
+    > preloaded-images-k8s-v18-v1...:  272.45 MiB / 272.45 MiB  100.00% 837.04
+    > gcr.io/k8s-minikube/kicbase...:  339.91 MiB / 519.58 MiB  65.42% 607.49 K
+    > index.docker.io/kicbase/sta...:  475.02 MiB / 519.58 MiB  91.42% 807.53 K
+🔥  Creating docker container (CPUs=2, Memory=3072MB) ... 
+🐳  Preparing Kubernetes v1.35.1 on Docker 29.2.1 ... 
+🔗  Configuring bridge CNI (Container Networking Interface) ...
+🔎  Verifying Kubernetes components...
+    ▪ Using image gcr.io/k8s-minikube/storage-provisioner:v5
+🌟  Enabled addons: storage-provisioner, default-storageclass
+🏄  Done! kubectl is now configured to use "minikube" cluster and "default" namespace by default
+(base) PS D:\Kubernete\express-demo\express-demo> minikube status
+minikube
+type: Control Plane
+host: Running
+kubelet: Running
+apiserver: Running
+kubeconfig: Configured
+
+(base) PS D:\Kubernete\express-demo\express-demo> kubectl create deployment node-app --image=philippaul/node-demo-app:01
+deployment.apps/node-app created
+
+(base) PS D:\Kubernete\express-demo\express-demo> kubectl get deployment 
+NAME       READY   UP-TO-DATE   AVAILABLE   AGE
+node-app   0/1     1            0           60s
+(base) PS D:\Kubernete\express-demo\express-demo> kubectl get pods      
+NAME                        READY   STATUS              RESTARTS   AGE
+node-app-7dccd4786f-ptml4   0/1     ContainerCreating   0          67s
+(base) PS D:\Kubernete\express-demo\express-demo> kubectl get services
+NAME         TYPE        CLUSTER-IP   EXTERNAL-IP   PORT(S)   AGE
+kubernetes   ClusterIP   10.96.0.1    <none>        443/TCP   16m
+(base) PS D:\Kubernete\express-demo\express-demo> kubectl expose deployment node-app --type=LoadBalancer --port=3000
+service/node-app exposed
+(base) PS D:\Kubernete\express-demo\express-demo> kubectl get services
+NAME         TYPE           CLUSTER-IP      EXTERNAL-IP   PORT(S)          AGE
+kubernetes   ClusterIP      10.96.0.1       <none>        443/TCP          36m
+node-app     LoadBalancer   10.102.55.213   <pending>     3000:30842/TCP   17m
+
+(base) PS D:\Kubernete\express-demo\express-demo> minikube service node-app
+┌───────────┬──────────┬─────────────┬───────────────────────────┐
+│ NAMESPACE │   NAME   │ TARGET PORT │            URL            │
+├───────────┼──────────┼─────────────┼───────────────────────────┤
+│ default   │ node-app │ 3000        │ http://192.168.49.2:30842 │
+└───────────┴──────────┴─────────────┴───────────────────────────┘
+🔗  Starting tunnel for service node-app.
+┌───────────┬──────────┬─────────────┬────────────────────────┐
+│ NAMESPACE │   NAME   │ TARGET PORT │          URL           │
+├───────────┼──────────┼─────────────┼────────────────────────┤
+│ default   │ node-app │             │ http://127.0.0.1:63485 │
+└───────────┴──────────┴─────────────┴────────────────────────┘
+🎉  Opening service default/node-app in default browser...
+❗  Because you are using a Docker driver on windows, the terminal needs to be open to run it.
+
+(base) PS D:\Kubernete\express-demo\express-demo> kubectl get pods
+NAME                        READY   STATUS    RESTARTS       AGE
+node-app-7dccd4786f-ptml4   1/1     Running   3 (2m5s ago)   35m
+(base) PS D:\Kubernete\express-demo\express-demo> 
+now modify the CLI's
+
+--------------------------------------------------------------------------------------------------------
+
+# Scaling our APP
+
+(base) PS D:\Kubernete\express-demo\express-demo> minikube start --driver=docker
+😄  minikube v1.38.1 on Microsoft Windows 11 Pro 25H2
+✨  Using the docker driver based on existing profile
+👍  Starting "minikube" primary control-plane node in "minikube" cluster
+🚜  Pulling base image v0.0.50 ...
+🔄  Restarting existing docker container for "minikube" ... 
+🐳  Preparing Kubernetes v1.35.1 on Docker 29.2.1 ... 
+🔎  Verifying Kubernetes components...
+    ▪ Using image docker.io/kubernetesui/dashboard:v2.7.0
+    ▪ Using image docker.io/kubernetesui/metrics-scraper:v1.0.8
+    ▪ Using image gcr.io/k8s-minikube/storage-provisioner:v5
+💡  Some dashboard features require the metrics-server addon. To enable all features please run:
+
+        minikube addons enable metrics-server
+
+🌟  Enabled addons: default-storageclass, storage-provisioner, dashboard
+🏄  Done! kubectl is now configured to use "minikube" cluster and "default" namespace by default
+(base) PS D:\Kubernete\express-demo\express-demo> minikube status
+minikube
+type: Control Plane
+host: Running
+kubelet: Running
+apiserver: Running
+kubeconfig: Configured
+
+(base) PS D:\Kubernete\express-demo\express-demo> kubectl get pods
+NAME                        READY   STATUS    RESTARTS        AGE
+node-app-7dccd4786f-ptml4   1/1     Running   4 (7m38s ago)   18h
+(base) PS D:\Kubernete\express-demo\express-demo> kubectl get pods
+NAME                        READY   STATUS    RESTARTS        AGE
+node-app-7dccd4786f-ptml4   1/1     Running   4 (7m38s ago)   18h
+(base) PS D:\Kubernete\express-demo\express-demo> kubectl scale deployment node-app --replicas=4
+deployment.apps/node-app scaled
+
+(base) PS D:\Kubernete\express-demo\express-demo> kubectl get pods
+NAME                        READY   STATUS    RESTARTS      AGE
+node-app-7dccd4786f-cb4zh   1/1     Running   0             3m7s
+node-app-7dccd4786f-k8ln7   1/1     Running   0             3m7s
+node-app-7dccd4786f-mlsm6   1/1     Running   0             3m7s
+node-app-7dccd4786f-ptml4   1/1     Running   4 (12m ago)   18h
+(base) PS D:\Kubernete\express-demo\express-demo> minikube service node-app
+┌───────────┬──────────┬─────────────┬───────────────────────────┐
+│ NAMESPACE │   NAME   │ TARGET PORT │            URL            │
+├───────────┼──────────┼─────────────┼───────────────────────────┤
+│ default   │ node-app │ 3000        │ http://192.168.49.2:30842 │
+└───────────┴──────────┴─────────────┴───────────────────────────┘
+🔗  Starting tunnel for service node-app.
+┌───────────┬──────────┬─────────────┬────────────────────────┐
+│ NAMESPACE │   NAME   │ TARGET PORT │          URL           │
+├───────────┼──────────┼─────────────┼────────────────────────┤
+│ default   │ node-app │             │ http://127.0.0.1:52485 │
+└───────────┴──────────┴─────────────┴────────────────────────┘
+🎉  Opening service default/node-app in default browser...
+❗  Because you are using a Docker driver on windows, the terminal needs to be open to run it.
+
+(base) PS D:\Kubernete\express-demo\express-demo> kubectl get pods
+NAME                        READY   STATUS    RESTARTS       AGE
+node-app-7dccd4786f-cb4zh   1/1     Running   1 (64s ago)    20m
+node-app-7dccd4786f-k8ln7   1/1     Running   2 (95s ago)    20m
+node-app-7dccd4786f-mlsm6   1/1     Running   0              20m
+node-app-7dccd4786f-ptml4   1/1     Running   5 (109s ago)   18h
+(base) PS D:\Kubernete\express-demo\express-demo> kubectl scale deployment node-app --replicas=2
+deployment.apps/node-app scaled
+(base) PS D:\Kubernete\express-demo\express-demo> kubectl get pods
+NAME                        READY   STATUS        RESTARTS        AGE
+node-app-7dccd4786f-cb4zh   1/1     Running       1 (3m43s ago)   22m
+node-app-7dccd4786f-k8ln7   1/1     Terminating   2 (4m14s ago)   22m
+node-app-7dccd4786f-mlsm6   1/1     Running       0               22m
+node-app-7dccd4786f-ptml4   1/1     Terminating   5 (4m28s ago)   18h
+(base) PS D:\Kubernete\express-demo\express-demo> kubectl get pods
+NAME                        READY   STATUS    RESTARTS        AGE
+node-app-7dccd4786f-cb4zh   1/1     Running   1 (4m20s ago)   23m
+node-app-7dccd4786f-mlsm6   1/1     Running   0               23m
+(base) PS D:\Kubernete\express-demo\express-demo>

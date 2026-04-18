@@ -1,0 +1,553 @@
+Kubernetes (Minikube + Docker) Setup CLI with Comments
+
+# ================================
+# 1. Install Minikube (already done)
+# ================================
+choco install minikube
+
+
+# ================================
+# 2. Start Docker Desktop FIRST
+# ================================
+# IMPORTANT:
+# - Open Docker Desktop manually
+# - Wait until it says "Docker is running"
+
+docker ps
+# If error → Docker is NOT running
+
+
+# ================================
+# 3. Clean previous broken Minikube
+# ================================
+minikube delete --all --purge
+
+# Also manually delete leftover folder (VERY IMPORTANT)
+# Path:
+# C:\Users\saada\.minikube
+
+
+# ================================
+# 4. Start Minikube using Docker driver
+# ================================
+minikube start --driver=docker
+
+# NOTE:
+# If error like "gcr.io not reachable"
+# → It is INTERNET / DNS issue
+
+
+# ================================
+# 5. Fix DNS issue (IMPORTANT for your case)
+# ================================
+# Run this if "gcr.io: no such host" error appears
+
+ipconfig /flushdns
+
+# OR set DNS manually (recommended)
+# Use Google DNS:
+# 8.8.8.8
+# 8.8.4.4
+
+
+# ================================
+# 6. Verify Minikube is running
+# ================================
+minikube status
+
+# Expected output:
+# host: Running
+# kubelet: Running
+# apiserver: Running
+# kubeconfig: Configured
+
+
+# ================================
+# 7. Verify Kubernetes connection
+# ================================
+kubectl get nodes
+
+# Expected:
+# minikube   Ready
+
+
+# ================================
+# 8. Create Deployment (Node App)
+# ================================
+kubectl create deployment node-app --image=philippaul/node-demo-app:01
+
+# This creates a pod running your container
+
+
+# ================================
+# 9. Check Pods
+# ================================
+kubectl get pods
+
+
+# ================================
+# 10. Expose Deployment (Make it accessible)
+# ================================
+kubectl expose deployment node-app --type=NodePort --port=3000
+
+
+# ================================
+# 11. Access your app
+# ================================
+minikube service node-app
+
+# This will open browser automatically
+
+
+# ================================
+# 12. Debugging Commands
+# ================================
+
+# Check logs
+kubectl logs <pod-name>
+
+# Describe pod (very useful)
+kubectl describe pod <pod-name>
+
+# Check services
+kubectl get services
+
+# Delete deployment
+kubectl delete deployment node-app
+
+# Delete service
+kubectl delete service node-app
+
+------------------------------------------------------------------------------
+
+📄 Kubernetes (Minikube + Docker) Working CLI with Comments
+
+# ==========================================
+# 1. Start Minikube with Docker Driver
+# ==========================================
+minikube start --driver=docker
+
+# NOTE:
+# - Uses Docker instead of Hyper-V (recommended for Windows)
+# - If gcr.io fails → fallback image from docker.io is used (OK)
+
+
+# ==========================================
+# 2. Check Minikube Status
+# ==========================================
+minikube status
+
+# Expected Output:
+# host: Running
+# kubelet: Running
+# apiserver: Running
+# kubeconfig: Configured
+
+
+# ==========================================
+# 3. Verify Kubernetes Cluster
+# ==========================================
+kubectl get nodes
+
+# Output:
+# minikube   Ready   control-plane
+
+
+# ==========================================
+# 4. Check Docker Container (Minikube VM)
+# ==========================================
+docker ps
+
+# Shows minikube container running (kicbase image)
+
+
+# ==========================================
+# 5. Open Kubernetes Dashboard (Optional)
+# ==========================================
+minikube dashboard
+
+# Opens browser UI for cluster management
+# NOTE:
+# Press Ctrl+C to stop dashboard proxy
+
+
+# ==========================================
+# 6. Create Deployment (Nginx App)
+# ==========================================
+kubectl create deployment my-nginx --image=nginx:latest
+
+# Deployment automatically creates a Pod
+
+
+# ==========================================
+# 7. Check Deployment Status
+# ==========================================
+kubectl get deployments
+
+# READY column should become 1/1 after some time
+
+
+# ==========================================
+# 8. Check Pods
+# ==========================================
+kubectl get pods
+
+# Pod status should be:
+# Running
+
+
+# ==========================================
+# 9. Expose Deployment (Make App Accessible)
+# ==========================================
+kubectl expose deployment my-nginx --type=NodePort --port=80
+
+# NodePort exposes service outside cluster
+
+
+# ==========================================
+# 10. Check Services
+# ==========================================
+kubectl get services
+
+# Example Output:
+# my-nginx   NodePort   80:32255/TCP
+
+
+# ==========================================
+# 11. Access Application
+# ==========================================
+minikube service my-nginx
+
+# Opens browser with URL
+# NOTE:
+# Keep terminal open (required for tunnel on Windows)
+
+
+# ==========================================
+# 12. Delete Resources (Cleanup)
+# ==========================================
+
+# Delete service
+kubectl delete service my-nginx
+
+# Delete deployment
+kubectl delete deployment my-nginx
+
+
+# ==========================================
+# 13. Stop or Delete Minikube (Optional)
+# ==========================================
+
+# Stop cluster
+minikube stop
+
+# Delete cluster completely
+minikube delete
+
+------------------------------------------------------------------------
+
+📄 Full DevOps Workflow (React + Docker + Kubernetes)
+
+# ==========================================
+# 1. Create React App
+# ==========================================
+node -v
+# Check Node.js version
+
+npx create-react-app testapp
+# Creates a new React application
+
+cd testapp
+
+npm start
+# Runs app locally on http://localhost:3000
+
+
+# ==========================================
+# 2. Build Docker Image
+# ==========================================
+docker build -t saadazeem786/testapp:latest1 .
+
+# Builds Docker image from Dockerfile
+# Tag format: username/repository:tag
+
+
+# ==========================================
+# 3. Push Image to Docker Hub
+# ==========================================
+docker login
+# Login to Docker Hub
+
+docker push saadazeem786/testapp:latest1
+# Upload image so Kubernetes can access it
+
+
+# ==========================================
+# 4. Clean Old Minikube (Optional Reset)
+# ==========================================
+Remove-Item -Recurse -Force C:\Users\saada\.minikube
+# Deletes corrupted Minikube config
+
+docker stop minikube
+docker rm minikube
+# Remove old container if exists
+
+
+# ==========================================
+# 5. Start Minikube Cluster
+# ==========================================
+minikube start --driver=docker
+
+# Starts Kubernetes cluster using Docker
+# Automatically configures kubectl
+
+
+# ==========================================
+# 6. Verify Cluster
+# ==========================================
+minikube status
+
+kubectl get nodes
+# Ensure node is Ready
+
+
+# ==========================================
+# 7. Deploy React App to Kubernetes
+# ==========================================
+kubectl create deployment my-webapp --image=saadazeem786/testapp:latest1
+
+# Creates deployment (which creates Pods)
+
+
+# ==========================================
+# 8. Check Deployment & Pods
+# ==========================================
+kubectl get deployments
+
+kubectl get pods
+# Initially: ContainerCreating → then Running
+
+
+# ==========================================
+# 9. Debug Pod (Logs + Details)
+# ==========================================
+kubectl logs <pod-name>
+# View application logs
+
+kubectl describe pods
+# Full details (IP, image, events, errors)
+
+
+# ==========================================
+# 10. Expose App (IMPORTANT STEP)
+# ==========================================
+kubectl expose deployment my-webapp --type=LoadBalancer --port=3000
+
+# LoadBalancer creates external access
+# In Minikube → works via tunnel
+
+
+# ==========================================
+# 11. Access Application
+# ==========================================
+minikube service my-webapp
+
+# Opens browser with URL
+# NOTE:
+# Keep terminal open (tunnel required)
+
+
+# ==========================================
+# 12. Check Services
+# ==========================================
+kubectl get services
+
+# Example:
+# TYPE: LoadBalancer
+# PORT: 3000:32450
+
+
+# ==========================================
+# 13. Delete Resources (Cleanup)
+# ==========================================
+kubectl delete deployment my-webapp
+kubectl delete service my-webapp
+
+
+# ==========================================
+# 14. Kubernetes Dashboard (Optional)
+# ==========================================
+minikube dashboard
+
+# Opens UI in browser
+# ==========================================
+# 1. Create Deployment
+# ==========================================
+kubectl create deployment node-app --image=philippaul/node-demo-app:01
+
+# ==========================================
+# 2. Update Deployment (New Version)
+# ==========================================
+kubectl set image deployment/node-app \
+node-app=nginx:latest
+
+# This updates container image (creates new revision)
+
+
+# ==========================================
+# 3. Check Rollout Status
+# ==========================================
+kubectl rollout status deployment/node-app
+
+
+# ==========================================
+# 4. View Rollout History
+# ==========================================
+kubectl rollout history deployment/node-app
+
+
+# ==========================================
+# 5. Rollback to Previous Version
+# ==========================================
+kubectl rollout undo deployment/node-app
+
+# Rollback to specific revision (optional)
+kubectl rollout undo deployment/node-app --to-revision=1
+
+
+# ==========================================
+# 6. Verify Rollback
+# ==========================================
+kubectl get pods
+kubectl describe deployment node-app
+
+
+# ==========================================
+# 1. Install Dependencies (Local App)
+# ==========================================
+cd express-demo
+npm install
+
+# Run locally (for testing)
+node index.js
+# App runs on localhost:3000
+
+
+# ==========================================
+# 2. Start Minikube Cluster
+# ==========================================
+minikube start --driver=docker
+
+# Verify cluster
+minikube status
+kubectl get nodes
+
+
+# ==========================================
+# 3. Create Deployment
+# ==========================================
+kubectl create deployment node-app \
+--image=philippaul/node-demo-app:01
+
+
+# ==========================================
+# 4. Check Deployment & Pod
+# ==========================================
+kubectl get deployments
+kubectl get pods
+
+# Pod initially: ContainerCreating → Running
+
+
+# ==========================================
+# 5. Expose Application
+# ==========================================
+kubectl expose deployment node-app \
+--type=LoadBalancer --port=3000
+
+kubectl get services
+
+
+# ==========================================
+# 6. Access Application
+# ==========================================
+minikube service node-app
+
+# Opens browser
+# NOTE: Keep terminal open for tunnel
+
+
+# ==========================================
+# 7. Verify Pod is Running
+# ==========================================
+kubectl get pods
+
+# Example:
+# STATUS: Running
+# RESTARTS: >0 (important for self-healing)
+
+🚀 Kubernetes Scaling + Service Access (Documented CLI)
+# ----------------------------------------------------------
+# STEP 1: Start Minikube Cluster (Docker Driver)
+# ----------------------------------------------------------
+minikube start --driver=docker
+# Starts Kubernetes cluster using Docker instead of Hyper-V/VM
+
+minikube status
+# Verify cluster is running (host, kubelet, apiserver should be Running)
+
+
+# ----------------------------------------------------------
+# STEP 2: Check Existing Pods
+# ----------------------------------------------------------
+kubectl get pods
+# Initially only 1 pod is running (default replica = 1)
+
+
+# ----------------------------------------------------------
+# STEP 3: Scale Application (Horizontal Scaling)
+# ----------------------------------------------------------
+kubectl scale deployment node-app --replicas=4
+# Increase number of pods (replicas) from 1 → 4
+
+kubectl get pods
+# Verify 4 pods are created and running
+
+
+# ----------------------------------------------------------
+# STEP 4: Access Application via Service
+# ----------------------------------------------------------
+minikube service node-app
+# Opens service in browser via NodePort + tunnel
+# IMPORTANT: Terminal must stay open (Windows Docker driver requirement)
+
+
+# ----------------------------------------------------------
+# STEP 5: Observe Self-Healing Behavior
+# ----------------------------------------------------------
+kubectl get pods
+# You may see RESTARTS increasing → Kubernetes auto-restarts crashed containers
+
+
+# ----------------------------------------------------------
+# STEP 6: Scale Down Application
+# ----------------------------------------------------------
+kubectl scale deployment node-app --replicas=2
+# Reduce replicas from 4 → 2
+
+kubectl get pods
+# Some pods go into "Terminating" state → expected behavior
+
+
+# ----------------------------------------------------------
+# STEP 7: Final Pod State Check
+# ----------------------------------------------------------
+kubectl get pods
+# Only 2 pods should remain in Running state
+
+
+# ----------------------------------------------------------
+# STEP 8: Optional - Monitor in Real Time
+# ----------------------------------------------------------
+kubectl get pods -w
+# Watch pods live (creation, termination, restart events)
