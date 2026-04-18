@@ -697,3 +697,241 @@ NAME                        READY   STATUS    RESTARTS        AGE
 node-app-7dccd4786f-cb4zh   1/1     Running   1 (4m20s ago)   23m
 node-app-7dccd4786f-mlsm6   1/1     Running   0               23m
 (base) PS D:\Kubernete\express-demo\express-demo>
+
+------------------------------------------------------------------------------------------------
+
+# Yaml config for deployment
+
+(base) PS D:\Kubernete> kubectl apply -f deployment-node-app.yml
+deployment.apps/my-node-app created
+(base) PS D:\Kubernete> kubectl get deployment
+NAME          READY   UP-TO-DATE   AVAILABLE   AGE
+my-node-app   0/2     2            0           151m
+node-app      2/2     2            2           26h
+(base) PS D:\Kubernete> kubectl get pods      
+NAME                          READY   STATUS             RESTARTS       AGE
+my-node-app-bf9c5cb49-fpmf9   0/1     ImagePullBackOff   0              151m
+my-node-app-bf9c5cb49-scckh   0/1     ImagePullBackOff   0              151m
+node-app-7dccd4786f-cb4zh     1/1     Running            2 (157m ago)   8h
+node-app-7dccd4786f-mlsm6     1/1     Running            1 (157m ago)   8h
+(base) PS D:\Kubernete> kubectl get services
+NAME         TYPE           CLUSTER-IP      EXTERNAL-IP   PORT(S)          AGE
+kubernetes   ClusterIP      10.96.0.1       <none>        443/TCP          26h
+node-app     LoadBalancer   10.102.55.213   <pending>     3000:30842/TCP   26h
+(base) PS D:\Kubernete> kubectl delete service node-app
+service "node-app" deleted from default namespace
+(base) PS D:\Kubernete> kubectl get services
+NAME         TYPE        CLUSTER-IP   EXTERNAL-IP   PORT(S)   AGE
+kubernetes   ClusterIP   10.96.0.1    <none>        443/TCP   26h
+(base) PS D:\Kubernete> kubectl apply -f service-node-app.yml
+service/service-my-node-app created
+(base) PS D:\Kubernete> kubectl get services
+NAME                  TYPE           CLUSTER-IP       EXTERNAL-IP   PORT(S)          AGE
+kubernetes            ClusterIP      10.96.0.1        <none>        443/TCP          26h   
+service-my-node-app   LoadBalancer   10.106.230.109   <pending>     8080:30876/TCP   14s   
+
+(base) PS D:\Kubernete> kubectl get pods
+NAME                          READY   STATUS             RESTARTS       AGE
+my-node-app-bf9c5cb49-fpmf9   0/1     ImagePullBackOff   0              178m
+my-node-app-bf9c5cb49-scckh   0/1     ImagePullBackOff   0              178m
+node-app-7dccd4786f-cb4zh     1/1     Running            2 (3h4m ago)   8h
+node-app-7dccd4786f-mlsm6     1/1     Running            1 (3h4m ago)   8h
+(base) PS D:\Kubernete> kubectl apply -f service-node-app.yml
+service/service-my-node-app unchanged
+(base) PS D:\Kubernete> kubectl get pods
+NAME                          READY   STATUS             RESTARTS       AGE
+my-node-app-bf9c5cb49-fpmf9   0/1     ImagePullBackOff   0              178m
+my-node-app-bf9c5cb49-scckh   0/1     ImagePullBackOff   0              178m
+node-app-7dccd4786f-cb4zh     1/1     Running            2 (3h4m ago)   8h
+node-app-7dccd4786f-mlsm6     1/1     Running            1 (3h4m ago)   8h
+(base) PS D:\Kubernete> kubectl describe pod my-node-app-bf9c5cb49-fpmf9
+Name:             my-node-app-bf9c5cb49-fpmf9
+Namespace:        default
+Priority:         0
+Service Account:  default
+Node:             minikube/192.168.49.2
+Start Time:       Sat, 18 Apr 2026 16:01:54 +0500
+Labels:           app=node-app
+                  pod-template-hash=bf9c5cb49
+Annotations:      <none>
+Status:           Pending
+IP:               10.244.0.21
+IPs:
+  IP:           10.244.0.21
+Controlled By:  ReplicaSet/my-node-app-bf9c5cb49
+Containers:
+  node-app:
+    Container ID:
+    Image:          philippaul/node-app:01
+    Image ID:
+    Port:           <none>
+    Host Port:      <none>
+    State:          Waiting
+      Reason:       ImagePullBackOff
+    Ready:          False
+    Restart Count:  0
+    Environment:    <none>
+    Mounts:
+      /var/run/secrets/kubernetes.io/serviceaccount from kube-api-access-ck5x5 (ro)  
+Conditions:
+  Type                        Status
+  PodReadyToStartContainers   True
+  Initialized                 True
+  Ready                       False
+  ContainersReady             False
+  PodScheduled                True
+Volumes:
+  kube-api-access-ck5x5:
+    Type:                    Projected (a volume that contains injected data from multiple sources)
+    TokenExpirationSeconds:  3607
+    ConfigMapName:           kube-root-ca.crt
+    Optional:                false
+    DownwardAPI:             true
+QoS Class:                   BestEffort
+Node-Selectors:              <none>
+Tolerations:                 node.kubernetes.io/not-ready:NoExecute op=Exists for 300s
+                             node.kubernetes.io/unreachable:NoExecute op=Exists for 300s
+Events:
+  Type     Reason          Age                    From               Message
+  ----     ------          ----                   ----               -------
+  Normal   Scheduled       179m                   default-scheduler  Successfully assigned default/my-node-app-bf9c5cb49-fpmf9 to minikube
+  Normal   SandboxChanged  178m                   kubelet            Pod sandbox changed, it will be killed and re-created.
+  Normal   Pulling         28m (x5 over 179m)     kubelet            Pulling image "philippaul/node-app:01"
+  Warning  Failed          28m (x5 over 178m)     kubelet            Failed to pull image "philippaul/node-app:01": Error response from daemon: pull access denied for philippaul/node-app, repository does not exist or may require 'docker login': denied: requested access to the resource is denied
+  Warning  Failed          28m (x5 over 178m)     kubelet            Error: ErrImagePull
+  Normal   BackOff         2m9s (x127 over 178m)  kubelet            Back-off pulling image "philippaul/node-app:01"
+  Warning  Failed          117s (x128 over 178m)  kubelet            Error: ImagePullBackOff
+(base) PS D:\Kubernete> kubectl apply -f deployment-node-app.yml
+deployment.apps/my-node-app configured
+(base) PS D:\Kubernete> kubectl get pods -w
+NAME                           READY   STATUS              RESTARTS       AGE
+my-node-app-746dcd54df-b7zmc   0/1     ContainerCreating   0              12s        
+my-node-app-bf9c5cb49-fpmf9    0/1     ImagePullBackOff    0              179m       
+my-node-app-bf9c5cb49-scckh    0/1     ImagePullBackOff    0              179m       
+node-app-7dccd4786f-cb4zh      1/1     Running             2 (3h5m ago)   8h
+node-app-7dccd4786f-mlsm6      1/1     Running             1 (3h5m ago)   8h
+(base) PS D:\Kubernete> kubectl get pods   
+NAME                           READY   STATUS              RESTARTS        AGE
+my-node-app-746dcd54df-b7zmc   0/1     ContainerCreating   0               129m      
+my-node-app-bf9c5cb49-fpmf9    0/1     ImagePullBackOff    0               5h9m      
+my-node-app-bf9c5cb49-scckh    0/1     ImagePullBackOff    0               5h9m      
+node-app-7dccd4786f-cb4zh      1/1     Running             2 (5h14m ago)   10h       
+node-app-7dccd4786f-mlsm6      1/1     Running             1 (5h14m ago)   10h       
+(base) PS D:\Kubernete> kubectl describe pod my-node-app-746dcd54df-b7zmc
+Name:             my-node-app-746dcd54df-b7zmc
+Namespace:        default
+Priority:         0
+Service Account:  default
+Node:             minikube/192.168.49.2
+Start Time:       Sat, 18 Apr 2026 19:01:38 +0500
+Labels:           app=node-app
+                  pod-template-hash=746dcd54df
+Annotations:      <none>
+Status:           Pending
+IP:               10.244.0.23
+IPs:
+  IP:           10.244.0.23
+Controlled By:  ReplicaSet/my-node-app-746dcd54df
+Containers:
+  node-app:
+    Container ID:
+    Image:          saadazeem786/testapp:latest1
+    Image ID:
+    Port:           <none>
+    Host Port:      <none>
+    State:          Waiting
+      Reason:       ErrImagePull
+    Ready:          False
+    Restart Count:  0
+    Environment:    <none>
+    Mounts:
+      /var/run/secrets/kubernetes.io/serviceaccount from kube-api-access-rqg4b (ro)  
+Conditions:
+  Type                        Status
+  PodReadyToStartContainers   True
+  Initialized                 True
+  Ready                       False
+  ContainersReady             False
+  PodScheduled                True
+Volumes:
+  kube-api-access-rqg4b:
+    Type:                    Projected (a volume that contains injected data from multiple sources)
+    TokenExpirationSeconds:  3607
+    ConfigMapName:           kube-root-ca.crt
+    Optional:                false
+    DownwardAPI:             true
+QoS Class:                   BestEffort
+Node-Selectors:              <none>
+Tolerations:                 node.kubernetes.io/not-ready:NoExecute op=Exists for 300s
+                             node.kubernetes.io/unreachable:NoExecute op=Exists for 300s
+Events:
+  Type     Reason     Age   From               Message
+  ----     ------     ----  ----               -------
+  Normal   Scheduled  133m  default-scheduler  Successfully assigned default/my-node-app-746dcd54df-b7zmc to minikube
+  Normal   Pulling    133m  kubelet            Pulling image "saadazeem786/testapp:latest1"
+  Warning  Failed     9s    kubelet            Failed to pull image "saadazeem786/testapp:latest1": dial tcp: lookup auth.docker.io on 192.168.65.254:53: no such host    
+  Warning  Failed     9s    kubelet            Error: ErrImagePull
+  Normal   BackOff    8s    kubelet            Back-off pulling image "saadazeem786/testapp:latest1"
+  Warning  Failed     8s    kubelet            Error: ImagePullBackOff
+(base) PS D:\Kubernete> minikube stop
+✋  Stopping node "minikube"  ...
+🛑  Powering off "minikube" via SSH ...
+🛑  1 node stopped.
+(base) PS D:\Kubernete> minikube start --dns-domain=8.8.8.8
+😄  minikube v1.38.1 on Microsoft Windows 11 Pro 25H2
+✨  Using the docker driver based on existing profile
+👍  Starting "minikube" primary control-plane node in "minikube" cluster
+🚜  Pulling base image v0.0.50 ...
+🔄  Restarting existing docker container for "minikube" ... 
+🐳  Preparing Kubernetes v1.35.1 on Docker 29.2.1 ... 
+🔗  Configuring bridge CNI (Container Networking Interface) ...
+🔎  Verifying Kubernetes components...
+    ▪ Using image docker.io/kubernetesui/dashboard:v2.7.0
+    ▪ Using image gcr.io/k8s-minikube/storage-provisioner:v5
+    ▪ Using image docker.io/kubernetesui/metrics-scraper:v1.0.8
+💡  Some dashboard features require the metrics-server addon. To enable all features please run:
+
+        minikube addons enable metrics-server
+
+🌟  Enabled addons: storage-provisioner, default-storageclass, dashboard
+🏄  Done! kubectl is now configured to use "minikube" cluster and "default" namespace by default
+(base) PS D:\Kubernete> kubectl get pods
+NAME                           READY   STATUS              RESTARTS        AGE
+my-node-app-746dcd54df-b7zmc   0/1     ContainerCreating   0               136m      
+my-node-app-bf9c5cb49-fpmf9    0/1     ContainerCreating   0               5h16m     
+my-node-app-bf9c5cb49-scckh    0/1     ImagePullBackOff    0               5h16m     
+node-app-7dccd4786f-cb4zh      1/1     Running             3 (2m20s ago)   10h       
+node-app-7dccd4786f-mlsm6      1/1     Running             2 (2m19s ago)   10h       
+(base) PS D:\Kubernete> kubectl get pods -w 
+NAME                           READY   STATUS              RESTARTS        AGE
+my-node-app-746dcd54df-b7zmc   0/1     ContainerCreating   0               137m      
+my-node-app-bf9c5cb49-fpmf9    0/1     ContainerCreating   0               5h16m     
+my-node-app-bf9c5cb49-scckh    0/1     ImagePullBackOff    0               5h16m     
+node-app-7dccd4786f-cb4zh      1/1     Running             3 (2m32s ago)   10h       
+node-app-7dccd4786f-mlsm6      1/1     Running             2 (2m31s ago)   10h
+
+kubectl delete deployment node-app
+kubectl delete deployment my-node-app
+
+kubectl apply -f deployment-node-app.yml       
+
+
+🚀 Kubernetes YAML Deployment (Clean + Commented CLI)
+# ----------------------------------------------------------
+# STEP 1: Apply Deployment YAML
+# ----------------------------------------------------------
+kubectl apply -f deployment-node-app.yml
+# Creates deployment "my-node-app" with defined replicas
+
+kubectl get deployments
+# Check deployment status (READY column should become 2/2)
+
+
+# ----------------------------------------------------------
+# STEP 2: Check Pods Status
+# ----------------------------------------------------------
+kubectl get pods
+# ❌ If you see ImagePullBackOff → image problem
+
+# Example issue:
+# Image: philippaul/node-app:01 (does NOT exist or is private)
