@@ -916,3 +916,5 @@ kubectl delete deployment my-node-app
 kubectl apply -f deployment-node-app.yml       
 
 
+================================================================================================
+
