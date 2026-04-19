@@ -916,22 +916,3 @@ kubectl delete deployment my-node-app
 kubectl apply -f deployment-node-app.yml       
 
 
-🚀 Kubernetes YAML Deployment (Clean + Commented CLI)
-# ----------------------------------------------------------
-# STEP 1: Apply Deployment YAML
-# ----------------------------------------------------------
-kubectl apply -f deployment-node-app.yml
-# Creates deployment "my-node-app" with defined replicas
-
-kubectl get deployments
-# Check deployment status (READY column should become 2/2)
-
-
-# ----------------------------------------------------------
-# STEP 2: Check Pods Status
-# ----------------------------------------------------------
-kubectl get pods
-# ❌ If you see ImagePullBackOff → image problem
-
-# Example issue:
-# Image: philippaul/node-app:01 (does NOT exist or is private)
