@@ -918,3 +918,34 @@ kubectl apply -f deployment-node-app.yml
 
 ================================================================================================
 
+Overview of multi container-app
+
+(base) PS D:\Kubernete> cd db-demo-app
+(base) PS D:\Kubernete\db-demo-app> docker run -p 27017:27017 -d --name mongodb mongo  
+failed to connect to the docker API at npipe:////./pipe/dockerDesktopLinuxEngine; check if the path is correct and if the daemon is running: open //./pipe/dockerDesktopLinuxEngine: The system cannot find the file specified.
+(base) PS D:\Kubernete\db-demo-app> docker run -p 27017:27017 -d --name mongodb mongo
+ec6997ec8a6c291f25fec669172c071e09fc61fa04189d55bbb834795cef545f
+(base) PS D:\Kubernete\db-demo-app> npm install
+
+added 86 packages, and audited 87 packages in 4s
+
+12 packages are looking for funding
+  run `npm fund` for details
+
+8 vulnerabilities (3 low, 1 moderate, 3 high, 1 critical)
+
+To address all issues, run:
+  npm audit fix
+
+Run `npm audit` for details.
+(base) PS D:\Kubernete\db-demo-app> node index.js
+Server is running on port 3000
+
+================================================================================================
+
+
+Deployment of multi container-app
+# Multiple container in a single pod
+
+
+

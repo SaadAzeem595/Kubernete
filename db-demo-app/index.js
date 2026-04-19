@@ -6,10 +6,7 @@ const app = express();
 const PORT = process.env.PORT || 3000;
 
 // Connect to MongoDB
-mongoose.connect('mongodb://mongo:27017/yourDatabaseName', {
-    useNewUrlParser: true,
-    useUnifiedTopology: true,
-});
+mongoose.connect("mongodb://localhost:27017/mydb");
 
 // Create a Mongoose model
 const Email = mongoose.model('Email', {
