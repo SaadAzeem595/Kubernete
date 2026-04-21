@@ -1,11 +1,7 @@
-FROM node
-
-WORKDIR /app/
-
-COPY . .
-
+FROM node:latest
+WORKDIR /app
+COPY package*.json ./
 RUN npm install
-
-CMD ["node", "index.js"]
-
-
+COPY . .
+# If your backend is index.js, this is fine
+CMD ["npm", "start"]

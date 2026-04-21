@@ -957,6 +957,55 @@ CONTAINER ID   IMAGE                                 COMMAND                  CR
 ec6997ec8a6c   mongo                                 "docker-entrypoint.s…"   47 minutes ago   Up 47 minutes   0.0.0.0:27017->27017/tcp, [::]:27017->27017/tcp                                                                                  
       mongodb
 abc4ab32ad49   gcr.io/k8s-minikube/kicbase:v0.0.50   "/usr/local/bin/entr…"   2 days ago       Up 20 minutes   127.0.0.1:52082->22/tcp, 127.0.0.1:52080->2376/tcp, 127.0.0.1:52083->5000/tcp, 127.0.0.1:52084->8443/tcp, 127.0.0.1:52081->32443/tcp   minikube
-(base) PS D:\Kubernete> kubectl apply -f service-node-app.yml
+(base) PS D:\Kubernete> kubectl apply -f service-node-app.ymls
 service/service-my-nodedb-app created
 
+
+================================================================================================
+
+Single K8 Config file
+
+# First add service-node-app.yaml file code in deployment-node-app.yml file
+
+(base) PS D:\Kubernete> cd db-demo-app
+(base) PS D:\Kubernete\db-demo-app> docker build -t saadazeem786/testapp:latest1 .
+[+] Building 29.7s (11/11) FINISHED                                                                      docker:default
+ => [internal] load build definition from Dockerfile                                                               0.1s
+ => => transferring dockerfile: 180B                                                                               0.0s
+ => [internal] load metadata for docker.io/library/node:latest                                                     3.0s
+ => [auth] library/node:pull token for registry-1.docker.io                                                        0.0s
+ => [internal] load .dockerignore                                                                                  0.0s
+ => => transferring context: 2B                                                                                    0.0s
+ => [1/5] FROM docker.io/library/node:latest@sha256:3953ec6a2c10154a58ccf4ba48083ddfe3f8641d63f0d1d5cb8a4a7816912  0.0s
+ => [internal] load build context                                                                                 12.6s
+ => => transferring context: 15.35MB                                                                              12.5s
+ => CACHED [2/5] WORKDIR /app                                                                                      0.0s
+ => [3/5] COPY package*.json ./                                                                                    0.1s
+ => [4/5] RUN npm install                                                                                         10.7s
+ => [5/5] COPY . .                                                                                                 1.3s 
+ => exporting to image                                                                                             1.7s 
+ => => exporting layers                                                                                            1.7s 
+ => => writing image sha256:88b74e45b5140d9d44295b99efd7797929dff2526830a8cca0f48ebf25c18f73                       0.0s 
+ => => naming to docker.io/saadazeem786/testapp:latest1
+
+(base) PS D:\Kubernete\db-demo-app> kubectl apply -f deployment-node-app.yml        
+deployment.apps/my-nodedb-app unchanged
+service/service-backend configured
+(base) PS D:\Kubernete\db-demo-app> minikube service service-backend        
+┌───────────┬─────────────────┬─────────────┬───────────────────────────┐
+│ NAMESPACE │      NAME       │ TARGET PORT │            URL            │
+├───────────┼─────────────────┼─────────────┼───────────────────────────┤
+│ default   │ service-backend │ http/8080   │ http://192.168.49.2:30132 │
+└───────────┴─────────────────┴─────────────┴───────────────────────────┘
+🔗  Starting tunnel for service service-backend.
+┌───────────┬─────────────────┬─────────────┬────────────────────────┐
+│ NAMESPACE │      NAME       │ TARGET PORT │          URL           │
+├───────────┼─────────────────┼─────────────┼────────────────────────┤
+│ default   │ service-backend │             │ http://127.0.0.1:65272 │
+└───────────┴─────────────────┴─────────────┴────────────────────────┘
+🎉  Opening service default/service-backend in default browser...
+❗  Because you are using a Docker driver on windows, the terminal needs to be open to run it.
+
+
+
+                          
