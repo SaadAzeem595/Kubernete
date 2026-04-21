@@ -609,3 +609,149 @@ kubectl logs <pod-name>
 
 kubectl get pods -w
 # Real-time monitoring
+
+
+
+
+
+# Yaml config for deployment
+
+# Apply (create/update) your deployment from YAML file
+kubectl apply -f deployment-node-app.yml
+# 👉 Creates or updates the Deployment "my-node-app"
+
+# Check deployment status
+kubectl get deployment
+# 👉 READY column should become 2/2 (means both pods running)
+
+# Check all pods
+kubectl get pods
+# 👉 Look for STATUS:
+#    Running ✅
+#    ImagePullBackOff ❌ (means image problem)
+
+# Watch pods in real-time (live debugging)
+kubectl get pods -w
+# 👉 Shows live changes (ContainerCreating → Running)
+
+# Describe a specific pod (deep debugging)
+kubectl describe pod <pod-name>
+# 👉 Shows errors like:
+#    - Image not found
+#    - DNS issues
+#    - Authentication issues
+
+# Check services
+kubectl get services
+# 👉 Shows exposed services and ports
+
+# Delete old service (if wrong config)
+kubectl delete service node-app
+# 👉 Removes incorrect service
+
+# Apply correct service config
+kubectl apply -f service-node-app.yml
+# 👉 Creates LoadBalancer service
+
+# Recheck services
+kubectl get services
+# 👉 EXTERNAL-IP may be <pending> in Minikube (normal)
+
+# Delete broken deployments (clean restart)
+kubectl delete deployment node-app
+kubectl delete deployment my-node-app
+# 👉 Removes old faulty pods and configs
+
+# Reapply fresh deployment
+kubectl apply -f deployment-node-app.yml
+# 👉 Starts clean deployment with corrected image
+
+# Check pods again
+kubectl get pods
+# 👉 Ensure no ImagePullBackOff now
+
+
+
+
+
+
+🚀 ✅ 1. Local Setup (Docker + Node App)
+# Navigate to project folder
+cd db-demo-app
+# 👉 Contains Node.js app + MongoDB connection code
+
+# Run MongoDB container locally
+docker run -p 27017:27017 -d --name mongodb mongo
+# 👉 Starts MongoDB on port 27017
+# 👉 Used by Node app for database connection
+
+# Install Node.js dependencies
+npm install
+# 👉 Installs required packages (express, mongoose, etc.)
+
+# Start Node.js server
+node index.js
+# 👉 Runs app on http://localhost:3000
+
+
+
+
+📦 ✅ 2. Kubernetes Deployment (Multi-Container Pod)
+# Apply deployment YAML (Node + MongoDB in same pod)
+kubectl apply -f deployment-node-app.yml
+# 👉 Creates deployment with multiple containers inside ONE pod
+
+# Load MongoDB image into Minikube (important)
+minikube image load mongo:latest
+# 👉 Makes image available inside Minikube cluster
+# 👉 Prevents ImagePullBackOff
+
+# Check running Docker containers (local system)
+docker ps
+# 👉 Confirms MongoDB container is running locally
+# 👉 Not directly used by Kubernetes (separate environment)
+
+# Apply service YAML (expose Node app)
+kubectl apply -f service-node-app.yml
+# 👉 Creates service to access Node app externally
+
+
+
+🔍 ✅ 3. Monitoring & Debugging
+# Check deployments
+kubectl get deployment
+# 👉 Verify replicas (e.g., 2/2 READY)
+
+# Check pods
+kubectl get pods
+# 👉 Look for:
+#    Running ✅
+#    ContainerCreating ⏳
+#    ImagePullBackOff ❌
+
+# Watch pods live
+kubectl get pods -w
+# 👉 Real-time status updates
+
+# Detailed pod info (multi-container debugging)
+kubectl describe pod <pod-name>
+# 👉 Shows:
+#    - Both containers status
+#    - Image errors
+#    - Events/logs
+
+# Check logs (IMPORTANT for multi-container)
+kubectl logs <pod-name> -c node-app
+kubectl logs <pod-name> -c mongodb
+# 👉 Separate logs for each container
+
+
+
+🌐 ✅ 4. Service Access (Minikube)
+# Check services
+kubectl get services
+# 👉 Look for NodePort or LoadBalancer
+
+# Access app in browser (Minikube way)
+minikube service service-my-nodedb-app
+# 👉 Opens URL in browser automatically

@@ -947,5 +947,16 @@ Server is running on port 3000
 Deployment of multi container-app
 # Multiple container in a single pod
 
+(base) PS D:\Kubernete> kubectl apply -f deployment-node-app.yml
+deployment/deployment-my-nodedb-app created
 
+(base) PS D:\Kubernete> minikube image load mongo:latest
+
+(base) PS D:\Kubernete> docker ps
+CONTAINER ID   IMAGE                                 COMMAND                  CREATED          STATUS          PORTS                                                                                                                                  NAMES
+ec6997ec8a6c   mongo                                 "docker-entrypoint.s…"   47 minutes ago   Up 47 minutes   0.0.0.0:27017->27017/tcp, [::]:27017->27017/tcp                                                                                  
+      mongodb
+abc4ab32ad49   gcr.io/k8s-minikube/kicbase:v0.0.50   "/usr/local/bin/entr…"   2 days ago       Up 20 minutes   127.0.0.1:52082->22/tcp, 127.0.0.1:52080->2376/tcp, 127.0.0.1:52083->5000/tcp, 127.0.0.1:52084->8443/tcp, 127.0.0.1:52081->32443/tcp   minikube
+(base) PS D:\Kubernete> kubectl apply -f service-node-app.yml
+service/service-my-nodedb-app created
 
