@@ -5,8 +5,11 @@ const bodyParser = require('body-parser');
 const app = express();
 const PORT = process.env.PORT || 3000;
 
+const MONGOHOST = process.env.MONGOHOST || "mongodb://mongo:27017/mydb";
+const MONGOPORT = process.env.MONGOPORT || '27017';
+
 // Connect to MongoDB
-mongoose.connect("mongodb://127.0.0.1:27017/mydb");
+mongoose.connect(`${MONGOHOST}:${MONGOPORT}/mydb`);
 
 // Create a Mongoose model
 const Email = mongoose.model('Email', {
