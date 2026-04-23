@@ -1009,8 +1009,10 @@ service/service-backend configured
 
 ============================================================================================================
 
-# Multiple containers in single POD
+# Multiple containers in Separate POD
 
+(base) PS D:\Kubernete> cd db-demo-app
+(base) PS D:\Kubernete\db-demo-app> docker build -t saadazeem786/testapp:latest2 .
 
 
                           
