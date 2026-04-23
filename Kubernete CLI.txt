@@ -1011,8 +1011,85 @@ service/service-backend configured
 
 # Multiple containers in Separate POD
 
+(base) PS D:\Kubernete\db-demo-app> minikube start    
+😄  minikube v1.38.1 on Microsoft Windows 11 Pro 25H2
+✨  Using the docker driver based on existing profile
+👍  Starting "minikube" primary control-plane node in "minikube" cluster
+🚜  Pulling base image v0.0.50 ...
+🔄  Restarting existing docker container for "minikube" ... 
+🐳  Preparing Kubernetes v1.35.1 on Docker 29.2.1 ... 
+🔎  Verifying Kubernetes components...
+    ▪ Using image gcr.io/k8s-minikube/storage-provisioner:v5
+    ▪ Using image docker.io/kubernetesui/dashboard:v2.7.0
+    ▪ Using image docker.io/kubernetesui/metrics-scraper:v1.0.8
+💡  Some dashboard features require the metrics-server addon. To enable all features please run:
+
+        minikube addons enable metrics-server
+
+🌟  Enabled addons: storage-provisioner, default-storageclass, dashboard
+🏄  Done! kubectl is now configured to use "minikube" cluster and "default" namespace by default
+(base) PS D:\Kubernete\db-demo-app> minikube dashboard
+🤔  Verifying dashboard health ...
+🚀  Launching proxy ...
+🤔  Verifying proxy health ...
+🎉  Opening http://127.0.0.1:63536/api/v1/namespaces/kubernetes-dashboard/services/http:kubernetes-dashboard:/proxy/ in your default browser...
+
 (base) PS D:\Kubernete> cd db-demo-app
 (base) PS D:\Kubernete\db-demo-app> docker build -t saadazeem786/testapp:latest2 .
 
+(base) PS D:\Kubernete\db-demo-app> docker tag saadazeem786/testapp:latest1 saadazeem786/testapp:latest2
+(base) PS D:\Kubernete\db-demo-app> docker push saadazeem786/testapp:latest2
+The push refers to repository [docker.io/saadazeem786/testapp]
+8480aa1086a2: Layer already exists 
+c03266ef53d8: Layer already exists 
+c2c3414b1d6b: Layer already exists 
+c150dd3f5fc9: Layer already exists 
+de73ef470b7b: Layer already exists 
+b267853a2602: Layer already exists 
+554bab0bf8e5: Layer already exists 
+c7e4851cdcce: Already exists 
+e4878375125a: Layer already exists 
+0d4319bae870: Layer already exists 
+e6275fd2e2fd: Layer already exists 
+d8532949980f: Layer already exists 
+latest2: digest: sha256:dbfdf33e0040ae3efda78b586b4ab0725dcd99cb24554c53c873d0db1714207a size: 856
+(base) PS D:\Kubernete\db-demo-app>
 
-                          
+(base) PS D:\Kubernete\db-demo-app> docker images
+                                                                                                         i Info →   U  In Use
+IMAGE                                                                        ID             DISK USAGE   CONTENT SIZE   EXTRA
+gcr.io/k8s-minikube/kicbase:v0.0.50                                          b97074569ae9       1.94GB          545MB    U   
+gcr.io/k8s-minikube/kicbase@sha256:eb4fec00e8ad70adf8e6436f195cc429825ffb85f95afcdb5d8d9deb576f3e93
+                                                                             eb4fec00e8ad       1.94GB          545MB        
+kicbase/stable:v0.0.50                                                       b97074569ae9       1.94GB          545MB    U   
+kicbase/stable@sha256:eb4fec00e8ad70adf8e6436f195cc429825ffb85f95afcdb5d8d9deb576f3e93
+                                                                             eb4fec00e8ad       1.94GB          545MB        
+mongo-express:latest                                                         1b23d7976f02        287MB         59.8MB        
+mongo:latest                                                                 eea850633519        1.3GB          341MB    U   
+saadazeem786/testapp:latest1                                                 dbfdf33e0040       2.06GB          457MB        
+saadazeem786/testapp:latest2                                                 dbfdf33e0040       2.06GB          457MB        
+ubuntu:latest                                                                186072bba1b2        119MB         31.7MB        
+(base) PS D:\Kubernete\db-demo-app> kubectl get all              
+NAME                 TYPE        CLUSTER-IP   EXTERNAL-IP   PORT(S)   AGE
+service/kubernetes   ClusterIP   10.96.0.1    <none>        443/TCP   6d8h
+(base) PS D:\Kubernete\db-demo-app> kubectl apply -f mongo-db.yml
+deployment.apps/mongo-app created
+service/service-mongodb created
+(base) PS D:\Kubernete\db-demo-app> kubectl get all              
+NAME                             READY   STATUS    RESTARTS   AGE
+pod/mongo-app-5664dd9654-fppz5   1/1     Running   0          104s
+
+NAME                      TYPE        CLUSTER-IP      EXTERNAL-IP   PORT(S)     AGE
+service/kubernetes        ClusterIP   10.96.0.1       <none>        443/TCP     6d8h
+service/service-mongodb   ClusterIP   10.109.35.239   <none>        27017/TCP   104s
+
+NAME                        READY   UP-TO-DATE   AVAILABLE   AGE
+deployment.apps/mongo-app   1/1     1            1           104s
+
+NAME                                   DESIRED   CURRENT   READY   AGE
+replicaset.apps/mongo-app-5664dd9654   1         1         1       104s
+(base) PS D:\Kubernete\db-demo-app> 
+
+----------------------------------------------------------------------------------------------------------------
+
+# ConfigMaps
