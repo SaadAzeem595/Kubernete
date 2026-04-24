@@ -5,16 +5,21 @@ const bodyParser = require('body-parser');
 const app = express();
 const PORT = process.env.PORT || 3000;
 
-const MONGOHOST = process.env.MONGOHOST || "mongodb://mongo:27017/mydb";
-const MONGOPORT = process.env.MONGOPORT || '27017';
+// Get the URL from the ConfigMap or use a default
+const dbURL = process.env.MONGODB_URL || "mongodb://service-mongodb:27017/mydb";
 
-// Connect to MongoDB
-mongoose.connect(`${MONGOHOST}:${MONGOPORT}/mydb`);
+console.log("Connecting to MongoDB at:", dbURL);
+
+// Connect to MongoDB (ONLY ONCE)
+mongoose.connect(dbURL)
+    .then(() => console.log("MongoDB Connected Successfully!"))
+    .catch(err => console.log("MongoDB Connection Error:", err));
 
 // Create a Mongoose model
 const Email = mongoose.model('Email', {
     email: String,
 });
+// ... rest of your code (Middlewares and Routes)
 
 // Middleware
 app.use(bodyParser.urlencoded({ extended: true }));

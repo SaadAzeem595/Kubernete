@@ -1093,3 +1093,54 @@ replicaset.apps/mongo-app-5664dd9654   1         1         1       104s
 ----------------------------------------------------------------------------------------------------------------
 
 # ConfigMaps
+
+(base) PS D:\Kubernete\db-demo-app> kubectl apply -f mongo-config.yml
+configmap/mongo-config created
+(base) PS D:\Kubernete\db-demo-app> kubectl apply -f node-app.yml    
+configmap/mongo-config unchanged
+deployment.apps/node-app created
+service/node-app-service created
+(base) PS D:\Kubernete\db-demo-app> kubectl get all                   
+NAME                             READY   STATUS    RESTARTS      AGE
+pod/mongo-app-5664dd9654-fppz5   1/1     Running   1 (14m ago)   22h
+
+NAME                       TYPE           CLUSTER-IP       EXTERNAL-IP   PORT(S)          AGE
+service/kubernetes         ClusterIP      10.96.0.1        <none>        443/TCP          7d7h
+service/node-app-service   LoadBalancer   10.111.217.253   <pending>     3000:30473/TCP   22h
+service/service-mongodb    ClusterIP      10.109.35.239    <none>        27017/TCP        22h
+
+NAME                        READY   UP-TO-DATE   AVAILABLE   AGE
+deployment.apps/mongo-app   1/1     1            1           22h
+
+NAME                                   DESIRED   CURRENT   READY   AGE
+replicaset.apps/mongo-app-5664dd9654   1         1         1       22h
+(base) PS D:\Kubernete\db-demo-app> kubectl apply -f node-app.yml
+configmap/mongo-config unchanged
+deployment.apps/node-app created
+service/node-app-service unchanged
+
+1. Point Docker to Minikube
+You must run this command in every new terminal window you open before you build an image. Otherwise, the image stays on your Windows machine and Minikube can't see it.
+
+PowerShell
+minikube docker-env | Invoke-Expression
+
+
+(base) PS D:\Kubernete\db-demo-app> minikube service node-app-service           
+┌───────────┬──────────────────┬─────────────┬───────────────────────────┐                                            
+│ NAMESPACE │       NAME       │ TARGET PORT │            URL            │
+├───────────┼──────────────────┼─────────────┼───────────────────────────┤
+│ default   │ node-app-service │ http/3000   │ http://192.168.49.2:30473 │
+└───────────┴──────────────────┴─────────────┴───────────────────────────┘
+🔗  Starting tunnel for service node-app-service.
+┌───────────┬──────────────────┬─────────────┬────────────────────────┐
+│ NAMESPACE │       NAME       │ TARGET PORT │          URL           │
+├───────────┼──────────────────┼─────────────┼────────────────────────┤
+│ default   │ node-app-service │             │ http://127.0.0.1:59058 │
+└───────────┴──────────────────┴─────────────┴────────────────────────┘
+🎉  Opening service default/node-app-service in default browser...
+❗  Because you are using a Docker driver on windows, the terminal needs to be open to run it.
+
+
+-------------------------------------------------------------------------------------------------
+

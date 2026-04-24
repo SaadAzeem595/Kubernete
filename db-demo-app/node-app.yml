@@ -1,3 +1,11 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: mongo-config
+data:
+  MONGOHOST: "service-mongodb" # This matches the Service name from your mongo-db.yml
+  MONGOPORT: "27017"
+---
 apiVersion: apps/v1
 kind: Deployment
 metadata:
@@ -14,18 +22,32 @@ spec:
     spec:
       containers:
         - name: node-app
-          image: saadazeem786/testapp:latest2
+          image: saadazeem786/testapp:latest5
+          imagePullPolicy: IfNotPresent # <--- ADD THIS LINE
+          command: ["node"]
+          args: ["index.js"]
+          env:
+            - name: MONGOHOST
+              valueFrom:
+                configMapKeyRef:
+                  name: mongo-config
+                  key: MONGOHOST
+            - name: MONGOPORT
+              valueFrom:
+                configMapKeyRef:
+                  name: mongo-config
+                  key: MONGOPORT
           ports:
             - containerPort: 3000
 ---
 apiVersion: v1
 kind: Service
 metadata:
-  name: node-app-service  # Changed name slightly to avoid confusion with deployment
+  name: node-app-service
 spec:
-  selector:
-    app: service-node-app
   type: LoadBalancer
+  selector:
+    app: node-app # This MUST match the Deployment label exactly
   ports:
     - name: http
       port: 3000
