@@ -755,3 +755,122 @@ kubectl get services
 # Access app in browser (Minikube way)
 minikube service service-my-nodedb-app
 # 👉 Opens URL in browser automatically
+
+
+
+🚀 Single K8 Config File (Deployment + Service Combined)
+# Go to project folder
+cd db-demo-app
+
+# Build Docker image for Node.js app
+# -t → tag name (repo:tag)
+docker build -t saadazeem786/testapp:latest1 .
+
+# Apply combined YAML file (Deployment + Service in one file)
+kubectl apply -f deployment-node-app.yml
+
+# Check service in browser (Minikube creates URL)
+minikube service service-backend
+
+
+🚀 Multiple Containers in Separate PODs
+# Start Minikube cluster
+minikube start
+
+# Open Kubernetes dashboard (GUI)
+minikube dashboard
+
+# Go to project directory
+cd db-demo-app
+
+# Build new version of app image
+docker build -t saadazeem786/testapp:latest2 .
+
+# Tag image (reuse same image ID with new version tag)
+docker tag saadazeem786/testapp:latest1 saadazeem786/testapp:latest2
+
+# Push image to Docker Hub (for Kubernetes to pull)
+docker push saadazeem786/testapp:latest2
+
+⚙️ ConfigMaps Setup (MongoDB + Node App)
+# Apply ConfigMap (stores DB connection details like host, port, etc.)
+kubectl apply -f mongo-config.yml
+
+# Apply Node.js app config (includes Deployment + Service + uses ConfigMap)
+kubectl apply -f node-app.yml
+
+# Check all running resources (pods, services, deployments)
+kubectl get all
+📊 Output Understanding (IMPORTANT)
+🟢 MongoDB Pod
+pod/mongo-app-5664dd9654-fppz5   1/1 Running
+
+👉 MongoDB database is running correctly
+
+🟢 Node App Service
+service/node-app-service   LoadBalancer   3000:30473/TCP
+
+👉 Key points:
+
+Port 3000 → your Node.js app
+Port 30473 → exposed via Minikube
+LoadBalancer → external access (simulated in Minikube)
+🟢 MongoDB Service
+service/service-mongodb   ClusterIP   27017/TCP
+
+👉 Internal service (used by Node app)
+
+🔁 Re-applying YAML
+kubectl apply -f node-app.yml
+
+👉 Output:
+
+unchanged → already applied
+created → new resource created
+
+🧠 Important Step (Minikube Docker Environment)
+# Point Docker CLI to Minikube's internal Docker
+minikube docker-env | Invoke-Expression
+
+👉 Why?
+
+Without this:
+❌ Image builds stay in Windows Docker
+❌ Kubernetes cannot see them
+
+✔ After this:
+
+Images are built inside Minikube
+🌐 Access Your Application
+# Open Node app in browser
+minikube service node-app-service
+
+👉 Output:
+
+External URL created
+Tunnel started
+Browser opens automatically
+⚠️ Important Note (You saw this)
+EXTERNAL-IP   <pending>
+
+👉 This is normal in Minikube
+✔ Because it simulates LoadBalancer using tunnel
+
+🔥 How ConfigMap Works (Viva Question)
+
+👉 Instead of hardcoding:
+
+mongodb://service-mongodb:27017
+
+You use ConfigMap values like:
+
+env:
+  - name: DB_HOST
+    valueFrom:
+      configMapKeyRef:
+        name: mongo-config
+        key: mongo-url
+
+👉 Then in Node.js:
+
+process.env.DB_HOST

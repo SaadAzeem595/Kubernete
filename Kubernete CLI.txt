@@ -1114,6 +1114,8 @@ deployment.apps/mongo-app   1/1     1            1           22h
 
 NAME                                   DESIRED   CURRENT   READY   AGE
 replicaset.apps/mongo-app-5664dd9654   1         1         1       22h
+
+
 (base) PS D:\Kubernete\db-demo-app> kubectl apply -f node-app.yml
 configmap/mongo-config unchanged
 deployment.apps/node-app created
@@ -1124,6 +1126,35 @@ You must run this command in every new terminal window you open before you build
 
 PowerShell
 minikube docker-env | Invoke-Expression
+(base) PS D:\Kubernete\db-demo-app> docker build -t saadazeem786/testapp:latest5 .
+[+] Building 24.0s (11/11) FINISHED                                                                    docker:default
+ => [internal] load build definition from Dockerfile                                                             0.0s
+ => => transferring dockerfile: 180B                                                                             0.0s
+ => [internal] load metadata for docker.io/library/node:latest                                                   5.5s
+ => [auth] library/node:pull token for registry-1.docker.io                                                      0.0s
+ => [internal] load .dockerignore                                                                                0.0s
+ => => transferring context: 2B                                                                                  0.0s
+ => [1/5] FROM docker.io/library/node:latest@sha256:c69f4e0640e5b065f2694579793e4309f1e0e49868b0f2fea29c44d9c0d  0.5s
+ => => resolve docker.io/library/node:latest@sha256:c69f4e0640e5b065f2694579793e4309f1e0e49868b0f2fea29c44d9c0d  0.0s
+ => => sha256:0c07e208ee94a97ffc2c452223b8577401ae1343efeafffcd6181351644d8d59 2.49kB / 2.49kB                   0.0s
+ => => sha256:7c42ab2c9553027da22a77a84c84395c756d286ec0296271c42233e8d670c984 6.75kB / 6.75kB                   0.0s
+ => => sha256:c69f4e0640e5b065f2694579793e4309f1e0e49868b0f2fea29c44d9c0dc2caf 5.14kB / 5.14kB                   0.0s
+ => [internal] load build context                                                                                0.3s
+ => => transferring context: 112.69kB                                                                            0.3s
+ => [2/5] WORKDIR /app                                                                                           0.1s
+ => [3/5] COPY package*.json ./                                                                                  0.1s
+ => [4/5] RUN npm install                                                                                       13.8s
+ => [5/5] COPY . .                                                                                               2.2s
+ => exporting to image                                                                                           1.5s
+ => => exporting layers                                                                                          1.4s
+ => => writing image sha256:dd9afc2256660a2ce8b45f7d9cf65c4464ce7adf9898d99d735de2e7d1e28d06                     0.0s
+ => => naming to docker.io/saadazeem786/testapp:latest5                                                          0.0s
+(base) PS D:\Kubernete\db-demo-app> kubectl delete deployment node-app
+deployment.apps "node-app" deleted from default namespace
+(base) PS D:\Kubernete\db-demo-app> kubectl apply -f node-app.yml
+configmap/mongo-config unchanged
+deployment.apps/node-app created
+service/node-app-service unchanged
 
 
 (base) PS D:\Kubernete\db-demo-app> minikube service node-app-service           
