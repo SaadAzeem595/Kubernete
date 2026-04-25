@@ -3,7 +3,7 @@ kind: Deployment
 metadata:
   name: mongo-app
 spec:
-  replicas: 2
+  replicas: 1
   selector:
     matchLabels:
       app: mongo-app
@@ -15,7 +15,6 @@ spec:
       containers:
         - name: mongo
           image: mongo:6
-          imagePullPolicy: IfNotPresent
           ports:
             - containerPort: 27017
 ---

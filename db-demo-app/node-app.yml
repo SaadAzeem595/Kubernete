@@ -20,7 +20,11 @@ spec:
             - containerPort: 3000
           env:
             - name: MONGODB_URL
-              value: "mongodb://10.97.67.212:27017/mydb"
+              value: "mongodb://service-mongodb:27017/mydb"
+      volumes:
+        - name: node-app-vol
+          persistentVolumeClaim:
+            claimName: host-pvc        
 ---
 apiVersion: v1
 kind: Service
