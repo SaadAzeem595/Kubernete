@@ -1,62 +1,54 @@
 const express = require('express');
 const mongoose = require('mongoose');
-const bodyParser = require('body-parser');
 
 const app = express();
-const PORT = process.env.PORT || 3000;
+const PORT = 3000;
 
-// Get the URL from the ConfigMap or use a default
-const dbURL = process.env.MONGODB_URL || "mongodb://service-mongodb:27017/mydb";
+const dbURL = process.env.MONGODB_URL;
 
-console.log("Connecting to MongoDB at:", dbURL);
+console.log("Connecting to:", dbURL);
 
-// Connect to MongoDB (ONLY ONCE)
-mongoose.connect(dbURL)
-    .then(() => console.log("MongoDB Connected Successfully!"))
-    .catch(err => console.log("MongoDB Connection Error:", err));
+// 🔥 Better connection (with retry)
+mongoose.connect(dbURL, {
+  useNewUrlParser: true,
+  useUnifiedTopology: true,
+})
+.then(() => console.log('MongoDB Connected Successfully! ✅'))
+.catch(err => console.error('MongoDB connection error ❌:', err));
 
-// Create a Mongoose model
-const Email = mongoose.model('Email', {
-    email: String,
+// Schema
+const emailSchema = new mongoose.Schema({
+  email: String,
 });
-// ... rest of your code (Middlewares and Routes)
+
+const Email = mongoose.model('Email', emailSchema);
 
 // Middleware
-app.use(bodyParser.urlencoded({ extended: true }));
-app.use(bodyParser.json());
+app.use(express.urlencoded({ extended: true }));
+app.use(express.json());
 
 // Routes
 app.get('/', (req, res) => {
-    res.sendFile(__dirname + '/index.html');
+  res.sendFile(__dirname + '/index.html');
 });
 
 app.post('/add-email', async (req, res) => {
-    const { email } = req.body;
-    try {
-        const newEmail = new Email({ email });
-        await newEmail.save();
-        res.redirect('/');
-    } catch (error) {
-        res.status(500).send('Error adding email');
-    }
+  try {
+    const newEmail = new Email({ email: req.body.email });
+    await newEmail.save();
+    console.log("Saved:", req.body.email);
+    res.send("Email saved successfully!");
+  } catch (err) {
+    console.error(err);
+    res.status(500).send("Error saving email");
+  }
 });
 
 app.get('/emails', async (req, res) => {
-    try {
-        const emails = await Email.find({});
-        res.json(emails);
-    } catch (error) {
-        res.status(500).send('Error fetching emails');
-    }
+  const data = await Email.find();
+  res.json(data);
 });
 
-app.get('/exit', (req, res) => {
-    // Perform actions to stop the server or any other desired actions
-    res.send('Server stopped');
-    process.exit(0); // This stops the server (not recommended in production)
-});
-
-// Start server
-app.listen(PORT, () => {
-    console.log(`Server is running on port ${PORT}`);
+app.listen(PORT, "0.0.0.0", () => {
+  console.log(`Server running on port ${PORT}`);
 });

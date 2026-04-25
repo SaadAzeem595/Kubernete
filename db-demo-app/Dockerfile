@@ -1,7 +1,12 @@
-FROM node:latest
+FROM node:18
+
 WORKDIR /app
+
 COPY package*.json ./
 RUN npm install
+
 COPY . .
-# If your backend is index.js, this is fine
-CMD ["npm", "start"]
+
+EXPOSE 3000
+
+CMD ["node", "index.js"]

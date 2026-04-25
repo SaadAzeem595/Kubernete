@@ -3,7 +3,4 @@ kind: ConfigMap
 metadata:
   name: mongo-config
 data:
-  # Add "mongodb://" at the start
-  MONGOHOST: "mongodb://service-mongodb"
-  MONGOPORT: "27017"
   MONGODB_URL: "mongodb://service-mongodb:27017/mydb"
