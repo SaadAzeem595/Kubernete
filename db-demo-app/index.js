@@ -9,12 +9,21 @@ const dbURL = process.env.MONGODB_URL;
 console.log("Connecting to:", dbURL);
 
 // 🔥 Better connection (with retry)
-mongoose.connect(dbURL, {
-  useNewUrlParser: true,
-  useUnifiedTopology: true,
-})
-.then(() => console.log('MongoDB Connected Successfully! ✅'))
-.catch(err => console.error('MongoDB connection error ❌:', err));
+const connectDB = async () => {
+  try {
+    await mongoose.connect(dbURL, {
+      useNewUrlParser: true,
+      useUnifiedTopology: true,
+      serverSelectionTimeoutMS: 5000
+    });
+    console.log('MongoDB Connected Successfully! ✅');
+  } catch (err) {
+    console.error('MongoDB connection error ❌:', err);
+    process.exit(1); // 🔥 stop app if DB fails
+  }
+};
+
+connectDB();
 
 // Schema
 const emailSchema = new mongoose.Schema({

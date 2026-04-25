@@ -2,16 +2,89 @@
 <html>
 <head>
   <title>Email App</title>
+  <style>
+    body {
+      font-family: Arial;
+      margin: 40px;
+    }
+
+    h1 {
+      font-size: 40px;
+    }
+
+    input {
+      padding: 8px;
+      width: 250px;
+    }
+
+    button {
+      padding: 8px 12px;
+      margin-left: 10px;
+      cursor: pointer;
+    }
+
+    ul {
+      margin-top: 20px;
+    }
+  </style>
 </head>
 <body>
-  <h2>Add Email</h2>
 
-  <form action="/add-email" method="POST">
-    <input type="email" name="email" required />
-    <button type="submit">Save</button>
+  <h1>Email App</h1>
+
+  <form id="emailForm">
+    <label>Email:</label>
+    <input type="email" id="emailInput" required />
+    <button type="submit">Submit</button>
   </form>
 
-  <br>
-  <a href="/emails" target="_blank">View Emails</a>
+  <hr>
+
+  <h2>Stored Emails:</h2>
+  <ul id="emailList"></ul>
+
+  <script>
+    const form = document.getElementById("emailForm");
+    const emailInput = document.getElementById("emailInput");
+    const emailList = document.getElementById("emailList");
+
+    // 🔥 Load emails on page load
+    async function loadEmails() {
+      const res = await fetch("/emails");
+      const data = await res.json();
+
+      emailList.innerHTML = "";
+
+      data.forEach(item => {
+        const li = document.createElement("li");
+        li.textContent = item.email;
+        emailList.appendChild(li);
+      });
+    }
+
+    // 🔥 Submit without reload
+    form.addEventListener("submit", async (e) => {
+      e.preventDefault();
+
+      const email = emailInput.value;
+
+      await fetch("/add-email", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json"
+        },
+        body: JSON.stringify({ email })
+      });
+
+      emailInput.value = "";
+
+      // 🔥 Refresh list instantly
+      loadEmails();
+    });
+
+    // Initial load
+    loadEmails();
+  </script>
+
 </body>
 </html>
